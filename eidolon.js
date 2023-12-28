@@ -43,7 +43,12 @@ class ProductManager {
 
     updateProduct(id, title, description, price, thumbnail, code, stock) {
 
+
         this.products = JSON.parse(fs.readFileSync('./products.json', { encoding: 'utf-8' }));
+
+        if (!this.products.some((e) => e.id === id)) {
+            return "No hay ningun producto con ese id"
+        }
 
         if (!title || !description || !price || !thumbnail || !code || !stock) {
             console.log("Falta uno o más campos");
