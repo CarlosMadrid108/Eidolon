@@ -69,6 +69,8 @@ class ProductManager {
 
     deleteProduct(id) {
 
+        this.products = JSON.parse(fs.readFileSync('./products.json', { encoding: 'utf-8' }));
+
         if (!this.products.some((e) => e.id === id)) {
             return "No hay ningun producto con ese id"
         }
