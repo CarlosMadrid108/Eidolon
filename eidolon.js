@@ -80,7 +80,7 @@ class ProductManager {
 
         fs.writeFileSync(this.path, JSON.stringify(productsForDelete), { encoding: 'utf-8' })
 
-        this.products = JSON.parse(fs.readFileSync('./products.json', { encoding: 'utf-8' }));
+        this.products = JSON.parse(fs.readFileSync(this.path, { encoding: 'utf-8' }));
         console.log(this.products)
     }
 
