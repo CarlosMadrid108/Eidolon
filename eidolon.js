@@ -1,15 +1,16 @@
 const fs = require('fs')
 
-fs.writeFileSync('./products.json', JSON.stringify([]), { encoding: 'utf-8' })
+fs.writeFileSync('./data/products.json', JSON.stringify([]), { encoding: 'utf-8' })
 
 class ProductManager {
     constructor() {
-        this.products = JSON.parse(fs.readFileSync('./products.json', { encoding: 'utf-8' }));
+        this.path = './data/products.json'
+        this.products = JSON.parse(fs.readFileSync('./data/products.json', { encoding: 'utf-8' }));
         this.id = 0;
     }
 
     getProducts() {
-        this.products = JSON.parse(fs.readFileSync('./products.json', { encoding: 'utf-8' }));
+        this.products = JSON.parse(fs.readFileSync(this.path, { encoding: 'utf-8' }));
 
         if (!this.products.find((e) => e.id)) {
             return "No hay productos agregados"
@@ -20,7 +21,7 @@ class ProductManager {
 
     addProduct(title, description, price, thumbnail, code, stock) {
 
-        this.products = JSON.parse(fs.readFileSync('./products.json', { encoding: 'utf-8' }));
+        this.products = JSON.parse(fs.readFileSync(this.path, { encoding: 'utf-8' }));
 
         if (!title || !description || !price || !thumbnail || !code || !stock) {
             console.log("Falta uno o más campos");
@@ -32,7 +33,7 @@ class ProductManager {
 
                 this.products.push(newProduct);
 
-                fs.writeFileSync('./products.json', JSON.stringify(this.products), { encoding: 'utf-8' })
+                fs.writeFileSync(this.path, JSON.stringify(this.products), { encoding: 'utf-8' })
 
                 console.log(`El producto ${title} ha sido agregado`);
             } else {
@@ -44,7 +45,7 @@ class ProductManager {
     updateProduct(id, title, description, price, thumbnail, code, stock) {
 
 
-        this.products = JSON.parse(fs.readFileSync('./products.json', { encoding: 'utf-8' }));
+        this.products = JSON.parse(fs.readFileSync(this.path, { encoding: 'utf-8' }));
 
         if (!this.products.some((e) => e.id === id)) {
             return "No hay ningun producto con ese id"
@@ -59,9 +60,9 @@ class ProductManager {
             productsForUpdate.push(productForReplace);
             productsForUpdate.sort((a, b) => a.id - b.id);
 
-            fs.writeFileSync('./products.json', JSON.stringify(productsForUpdate), { encoding: 'utf-8' })
+            fs.writeFileSync(this.path, JSON.stringify(productsForUpdate), { encoding: 'utf-8' })
 
-            this.products = JSON.parse(fs.readFileSync('./products.json', { encoding: 'utf-8' }));
+            this.products = JSON.parse(fs.readFileSync(this.path, { encoding: 'utf-8' }));
             console.log(this.products)
 
         }
@@ -69,7 +70,7 @@ class ProductManager {
 
     deleteProduct(id) {
 
-        this.products = JSON.parse(fs.readFileSync('./products.json', { encoding: 'utf-8' }));
+        this.products = JSON.parse(fs.readFileSync(this.path, { encoding: 'utf-8' }));
 
         if (!this.products.some((e) => e.id === id)) {
             return "No hay ningun producto con ese id"
@@ -77,7 +78,7 @@ class ProductManager {
 
         let productsForDelete = this.products.filter((e) => e.id !== id);
 
-        fs.writeFileSync('./products.json', JSON.stringify(productsForDelete), { encoding: 'utf-8' })
+        fs.writeFileSync(this.path, JSON.stringify(productsForDelete), { encoding: 'utf-8' })
 
         this.products = JSON.parse(fs.readFileSync('./products.json', { encoding: 'utf-8' }));
         console.log(this.products)
@@ -85,7 +86,7 @@ class ProductManager {
 
     getProductById(id) {
 
-        this.products = JSON.parse(fs.readFileSync('./products.json', { encoding: 'utf-8' }));
+        this.products = JSON.parse(fs.readFileSync(this.path, { encoding: 'utf-8' }));
 
         let productFinder = this.products.find((e) => e.id === id);
 
