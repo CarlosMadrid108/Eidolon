@@ -32,11 +32,11 @@ export class CartManager {
             if (!myCart) {
                 return false
             } else {
-                const exists = myCart.products.find(p => p.id === pid)
+                const exists = myCart.products.find(p => p.product === pid)
                 if (exists) {
                     exists.quantity = exists.quantity + 1
                 } else {
-                    myCart.products.push({ id: prod.id, quantity: 1 })
+                    myCart.products.push({ product: prod.id, quantity: 1 })
                 }
             }
 
