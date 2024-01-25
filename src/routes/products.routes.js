@@ -3,9 +3,6 @@ import { ProductManager } from "../models/productManager.js";
 
 const productManager = new ProductManager('./data/productos.json')
 
-
-
-
 const routerProd = Router();
 
 routerProd.get('/', async(req, res) => {
