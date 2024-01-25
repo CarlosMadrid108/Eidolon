@@ -1,0 +1,11 @@
+.products {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #363636;
+    padding: 20px;
+    border: 1px solid #363636;
+    width: 250px;
+    align-items: center;
+}

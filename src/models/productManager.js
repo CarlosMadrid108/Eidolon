@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs'
 import uuid4 from 'uuid4'
+import { io } from '../index.js'
 
 export class ProductManager {
 
@@ -30,6 +31,9 @@ export class ProductManager {
             prod.id = uuid4();
             prods.push(prod)
             await fs.writeFile(this.path, JSON.stringify(prods))
+            //Emit
+            io.emit('productos', prods)
+            
             return true
         }
     }
@@ -53,6 +57,9 @@ export class ProductManager {
             }
 
             await fs.writeFile(this.path, JSON.stringify(prods))
+            //Emit
+            io.emit('productos', prods)
+
             return true
 
         } else {
@@ -67,6 +74,9 @@ export class ProductManager {
         if (prod) {
             
             await fs.writeFile(this.path, JSON.stringify(prods.filter(p => p.id !== pid)))
+            //Emit
+            io.emit('productos', prods)
+
             return true
         } else {
             return false
