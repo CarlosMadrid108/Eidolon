@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { ProductManager } from "../models/productManager.js";
+import { ProductManager } from "../dao/db/managers/productManager.js";
 
-const productManager = new ProductManager('./data/productos.json')
+const productManager = new ProductManager()
 
 const routerProd = Router();
 
@@ -11,6 +11,7 @@ routerProd.get('/', async(req, res) => {
     const products = prods.slice(0, limit)
     res.status(200).send(products)
 })
+
 
 routerProd.get('/:pid', async(req, res) => {
     const {pid} = req.params

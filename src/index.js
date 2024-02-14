@@ -4,7 +4,8 @@ import path from 'path';
 import { fileURLToPath } from 'url'
 import http from 'http'
 import { Server } from "socket.io";
-import { ProductManager } from "./models/productManager.js";
+import { ProductManager } from "./dao/db/managers/productManager.js";
+import db from "./dao/db/db.js"
 
 import routerProd from "./routes/products.routes.js"
 import routerCart from "./routes/carts.routes.js"
@@ -45,6 +46,9 @@ io.on('connection',  async (socket)=>{
     //cuando intento importar algo. ¿Hay alguna manera de hacer importaciones en ese archivo?
 })
 
+
+
 server.listen(PORT, () => {
     console.log(`Server run on port ${PORT}`)
+    db.connect();
 })

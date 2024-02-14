@@ -3,11 +3,6 @@ const socket = io()
 //La lista se actualiza automáticamete luego de llevar a cabo el borrado o suma de un archivo por medio de los endpoints con postman.
 //Los emits vienen desde productManager
 
-//Si bien funciona correctamente, en consola recibo el mensaje "La conexión fue interrumpida mientras la página se cargaba."
-//cada vez que la lista se actualiza
-//¿Afecta en algo al proyecto?
-//No sé que es lo que lo causa
-
 function render(data) {
     const html = data.map(elem => {
         return (`
