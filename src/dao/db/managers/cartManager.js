@@ -50,7 +50,6 @@ export class CartManager {
                 }
             }
             )
-            console.log(exists)
             return true
         }
     }
