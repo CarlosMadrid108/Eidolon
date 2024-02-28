@@ -11,7 +11,7 @@ import db from "./dao/db/db.js"
 import routerProd from "./routes/products.routes.js"
 import routerCart from "./routes/carts.routes.js"
 import viewsRouter from "./routes/views.routes.js"
-import { SocketAddress } from "net";
+
 
 const PORT = 8080;
 const app = express();
@@ -39,28 +39,22 @@ app.use('/views', viewsRouter)
 
 export const io = new Server(server)
 io.on('connection', async (socket) => {
-    const productManager = new ProductManager()
+
     const chatManager = new ChatManager()
-    const prods = await productManager.getProducts()
+
     const chatList = await chatManager.showMessages()
     socket.emit('chatLoad', chatList)
-    socket.emit('list', prods)
-    socket.emit('bienvenido', 'Welcome')
+
     socket.on('new-message', async (data) => {
         try {
             const msgs = await chatManager.addMessage(data)
             const chat = await chatManager.showMessages()
             socket.emit('mensajes', chat)
-        } catch (error) {
+        } catch (err) {
             console.log(err)
         }
     })
-
-    //Para poder renderizar los productos desde la carga de la página tuve que enviar la data desde el server. Por alguna razón no pude usar readFile
-    //en el js de src/public/js porque me tira "Uncaught SyntaxError: import declarations may only appear at top level of a module"
-    //cuando intento importar algo. ¿Hay alguna manera de hacer importaciones en ese archivo?
 })
-
 
 
 server.listen(PORT, () => {

@@ -1,6 +1,6 @@
 
     <div>
-        <form onsubmit="return addMessage()">
+        <form id="chat_form" onsubmit="return addMessage()">
             <input id="mail" placeholder="Correo" required>
             <textarea id="text" placeholder="Mensaje" required></textarea>
             <button type="submit" >Enviar</button>
@@ -12,3 +12,4 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <script src="/js/chat.js"></script>
+    

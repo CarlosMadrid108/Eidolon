@@ -1,4 +1,3 @@
-import { io } from '../../../index.js'
 import chat from '../models/chat.models.js'
 
 export class ChatManager {

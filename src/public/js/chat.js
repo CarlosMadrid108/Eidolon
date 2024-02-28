@@ -20,6 +20,7 @@ const addMessage = () => {
         message: document.getElementById('text').value
     }
     socket.emit('new-message', msg)
+    document.getElementById("chat_form").reset();
     return false
 }
 

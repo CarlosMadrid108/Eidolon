@@ -4,22 +4,26 @@ const socket = io()
 //Los emits vienen desde productManager
 
 function render(data) {
-    const html = data.map(elem => {
+    const html = data.payload.map(elem => {
         return (`
             <div>
             <div>
             <strong>Product: ${elem.title}, </strong>
             <strong>Price: ${elem.price}</strong>
+            <form action="/api/carts/65cc1546436f70c6a35fee7c/product/${elem._id}" method="post">
+             <button name="add" value="agregar">Agregar al Carrito</button>
+            </form>
             </div> 
             </div>
         `)
     }).join(' ')
 
     document.getElementById('caja').innerHTML = html
+    document.getElementById('pag').innerHTML = `<strong>Página: ${data.page}, </strong>`
 }
 
 //Render de todos los productos
-socket.on('list', (data)=>{
+socket.on('list', (data) => {
     render(data)
 })
 

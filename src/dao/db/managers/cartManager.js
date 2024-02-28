@@ -1,14 +1,16 @@
 
 import carts from '../models/cart.model.js'
 import products from '../models/product.model.js'
-
+import { io } from '../../../index.js'
 
 export class CartManager {
 
     async getProducts(cid) {
 
         try {
-            const prod = await carts.findById(cid)
+            const prod = await carts.findById(cid).populate('products.product')
+            io.emit('carrito', prod.products)
+
             return prod.products
 
         } catch (err) {
@@ -52,5 +54,27 @@ export class CartManager {
             )
             return true
         }
+    }
+
+    async deleteProduct(cid, pid){
+        const myCart = await carts.findById(cid)
+        const prod = await products.findById(pid)
+
+        if (!myCart || !prod){
+            return false
+        }
+        
+        await carts.deleteOne({
+            _id: myCart._id,
+            "products.product": prod._id,
+        })
+
+        await carts.findByIdAndUpdate(myCart._id,{
+            $pull: {
+                products: {_id: prod._id}
+            }
+        }, {new: true});
+
+        return true
     }
 }

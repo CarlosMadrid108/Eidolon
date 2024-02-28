@@ -6,10 +6,14 @@ const productManager = new ProductManager()
 const routerProd = Router();
 
 routerProd.get('/', async(req, res) => {
-    const { limit } = req.query
-    const prods = await productManager.getProducts()
-    const products = prods.slice(0, limit)
-    res.status(200).send(products)
+    let { limit } = req.query
+    let { category } = req.query
+    let { page } = req.query
+    let { sort } = req.query
+
+const prods = await productManager.getProducts(limit, category, page, sort)
+ 
+    res.status(200).send(prods)
 })
 
 
