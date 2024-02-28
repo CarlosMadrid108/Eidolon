@@ -2,6 +2,7 @@
 import carts from '../models/cart.model.js'
 import products from '../models/product.model.js'
 import { io } from '../../../index.js'
+import mongoose from "mongoose";
 
 export class CartManager {
 
@@ -56,25 +57,24 @@ export class CartManager {
         }
     }
 
-    async deleteProduct(cid, pid){
-        const myCart = await carts.findById(cid)
-        const prod = await products.findById(pid)
+    async deleteProduct(cid, pid) {
+        try {
+            await carts.findOneAndUpdate({ _id: cid }, { $pull: { products: { product: pid } } }, { new: true })
+            return true
+        } catch (err) {
+            console.log(err)
+            return false
+        }
+    }
 
-        if (!myCart || !prod){
+    async deleteProducts(cid){
+        try{
+            await carts.updateOne({_id:cid}, { $set: { products: [] }});
+            return true
+        }catch(err){
+            console.log(err)
             return false
         }
         
-        await carts.deleteOne({
-            _id: myCart._id,
-            "products.product": prod._id,
-        })
-
-        await carts.findByIdAndUpdate(myCart._id,{
-            $pull: {
-                products: {_id: prod._id}
-            }
-        }, {new: true});
-
-        return true
     }
 }
