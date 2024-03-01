@@ -17,7 +17,7 @@ routerViews.get('/realTimeProducts', async (req, res) => {
     .then(res.render('home', {}))
 })
 
-//http://localhost:8080/views/carts/65cc1546436f70c6a35fee7c
+//http://localhost:8080/views/carts/65cc90030d43c6ca255667da
 routerViews.get('/carts/:cid', async (req, res) => {
     const {cid} = req.params
     const prods = await cartManager.getProducts(cid)
