@@ -12,6 +12,9 @@ routerSessions.post('/register', async (req, res) => {
     res.redirect('/views/login')
 })
 
+//Por alguna razón puede fallar el login o el logout por medio de las vistas. No he conseguido dar con la causa
+
+
 //http://localhost:8080/views/login
 routerSessions.post('/login', async (req, res) => {
     let user = req.body
