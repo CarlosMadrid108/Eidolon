@@ -10,7 +10,7 @@ function render(data) {
             <div>
             <strong>Product: ${elem.title}, </strong>
             <strong>Price: ${elem.price}</strong>
-            <form action="/api/carts/65cc90030d43c6ca255667da/product/${elem._id}" method="post">
+            <form action="/api/carts/65de1959bf90cca4f2f98877/product/${elem._id}" method="post">
              <button name="add" value="agregar">Agregar al Carrito</button>
             </form>
             </div> 
@@ -22,6 +22,8 @@ function render(data) {
     document.getElementById('pag').innerHTML = `<strong>Página: ${data.page}, </strong>`
 }
 
+
+
 //Render de todos los productos
 socket.on('list', (data) => {
     render(data)
@@ -31,4 +33,3 @@ socket.on('list', (data) => {
 socket.on('productos', (data) => {
     render(data)
 })
-

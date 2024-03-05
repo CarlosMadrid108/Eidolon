@@ -1,0 +1,16 @@
+<div>
+    <div>
+        <h1>{{role}} {{first_name}}</h1>
+    </div>
+    <ul>
+        <li>Nombre: {{first_name}}</li>
+        <li>Apellido: {{last_name}}</li>
+        <li>Correo: {{email}}</li>
+        <li>Edad: {{age}}</li>
+    </ul>
+</div>
+<a href="/views/realTimeProducts/?page=1">Productos</a>
+
+<form action="/api/sessions/logout" method="get">
+    <button name="logout" value="log">Logout</button>
+</form>

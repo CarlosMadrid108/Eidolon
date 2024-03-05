@@ -5,6 +5,7 @@ export class ProductManager {
 
     async getProducts(limit, filter, pg, sort) {
 
+
         if (!pg) {
             pg = 1
         }
@@ -31,7 +32,8 @@ export class ProductManager {
 
         if (!sort && filter) {
             const prods = await products.paginate({ category: filter }, { limit: limit, page: pg })
-            return {
+
+            const list =  {
                 payload: prods.docs,
                 totalPages: prods.totalPages,
                 prevPage: prods.prevPage,
@@ -42,10 +44,12 @@ export class ProductManager {
                 prevLink: `http://localhost:8080/api/products/?limit=${limit}&category=${filter}&page=${prods.prevPage}`,
                 nextLink: `http://localhost:8080/api/products/?limit=${limit}&category=${filter}&page=${prods.nextPage}`
             }
+            io.emit('productos', list)
+            return list
         }
         if (sort && !filter) {
             const prods = await products.paginate({}, { limit: limit, page: pg, sort: { price: sort } })
-            return {
+            const list = {
                 payload: prods.docs,
                 totalPages: prods.totalPages,
                 prevPage: prods.prevPage,
@@ -56,10 +60,12 @@ export class ProductManager {
                 prevLink: `http://localhost:8080/api/products/?limit=${limit}&page=${prods.prevPage}$sort=${sort}`,
                 nextLink: `http://localhost:8080/api/products/?limit=${limit}&page=${prods.nextPage}$sort=${sort}`
             }
+            io.emit('productos', list)
+            return list
         }
 
         const prods = await products.paginate({ category: filter }, { limit: limit, page: pg, sort: { price: sort } })
-        return {
+        const list = {
             payload: prods.docs,
             totalPages: prods.totalPages,
             prevPage: prods.prevPage,
@@ -70,6 +76,8 @@ export class ProductManager {
             prevLink: `http://localhost:8080/api/products/?limit=${limit}&page=${prods.prevPage}&category=${filter}$sort=${sort}`,
             nextLink: `http://localhost:8080/api/products/?limit=${limit}&page=${prods.nextPage}&category=${filter}$sort=${sort}`
         }
+        io.emit('productos', list)
+        return list
     }
 
 

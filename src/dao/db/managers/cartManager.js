@@ -2,7 +2,6 @@
 import carts from '../models/cart.model.js'
 import products from '../models/product.model.js'
 import { io } from '../../../index.js'
-import mongoose from "mongoose";
 
 export class CartManager {
 

@@ -1,6 +1,20 @@
 <div>
-<div id="caja" class="products"></div>
-<div id="pag" class="products"></div>
+    <div>
+        <div id="bienvenida" class="products">
+            <h1>Bienvenid@, {{first_name}}</h1>
+            <a href="/views/profile">Perfil</a>
+            <a href="/views/carts/65de1959bf90cca4f2f98877">Carrito</a>
+        </div>
+    </div>
+    
+    <div id="caja" class="products"></div>
+    <div id="pag" class="products"></div>
+    <div>
+        <form action="/api/sessions/logout" method="get">
+            <button name="logout" value="log">Logout</button>
+        </form>
+        
+    </div>
 </div>
 
 </div>

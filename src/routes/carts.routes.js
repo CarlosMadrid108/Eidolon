@@ -16,6 +16,7 @@ routerCart.get('/:cid', async (req, res) => {
     const { cid } = req.params
     const prod = await cartManager.getProducts(cid)
 
+
     if (prod) {
         res.status(200).send(prod)
     } else {
