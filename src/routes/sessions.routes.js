@@ -1,51 +1,45 @@
 
 import { Router } from "express";
-import { UserManager } from "../dao/db/managers/userManager.js";
-import users from "../dao/db/models/user.model.js";
+import passport from "passport";
 
 const routerSessions = Router();
-const userManager = new UserManager()
 
-routerSessions.post('/register', async (req, res) => {
-    userManager.addUser({ ...req.body, role: "Usuario" })
 
+routerSessions.post('/register', passport.authenticate('register',{failureRedirect:'/api/sessions/failregister'}), async (req, res) => {
     res.redirect('/views/login')
 })
 
-//Por alguna razón puede fallar el login o el logout por medio de las vistas. No he conseguido dar con la causa
+routerSessions.get('/failregister', async(req, res)=>{
+    console.log("Failed Strategy");
+    res.send({error:"Failed"});
+})
 
 
-//http://localhost:8080/views/login
-routerSessions.post('/login', async (req, res) => {
-    let user = req.body
-    let userFound = await users.findOne({ email: user.email, password: user.password })
-
-
-    if (userFound) {
-        
-        req.session.first_name = userFound.first_name,
-        req.session.last_name = userFound.last_name,
-        req.session.email = userFound.email,
-        req.session.age = userFound.age,
-        req.session.role = userFound.role,
-
-        res.redirect('/views/realTimeProducts/?page=1')
-        return
+routerSessions.post('/login', passport.authenticate('login', {failureRedirect:'/api/sessions/faillogin'}), async (req, res) => {
+    if(!req.user) return res.status(400).send({status:"error", error: "Invalid credentials"})
+    req.session.user = {
+        first_name : req.user.first_name,
+        last_name : req.user.last_name,
+        age: req.user.age,
+        email: req.user.email,
+        role: req.user.role,
     }
+    res.redirect('/views/realTimeProducts/?page=1')  
+})
 
-    res.send("Usuario o contraseña incorrectos")
-
+routerSessions.get('/faillogin', (req, res)=> {
+    res.send({error:"Failed Login"})
 })
 
 routerSessions.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
             res.send('Error en Logout')
-        }else{
+        } else {
             res.redirect('/views/login')
         }
 
-    })   
+    })
 })
 
 export default routerSessions

@@ -9,18 +9,17 @@ import { ProductManager } from "./dao/db/managers/productManager.js";
 import db from "./dao/db/db.js"
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import passport from "passport";
+import initializePassport from "./dao/db/passport/passport.js"; 
 
 import routerProd from "./routes/products.routes.js"
 import routerCart from "./routes/carts.routes.js"
 import viewsRouter from "./routes/views.routes.js"
 import routerSessions from "./routes/sessions.routes.js";
 
-
 const PORT = 8080;
 const app = express();
 
-//No me dejó usar __dirname porque estoy usando modules.
-//Buscando en google encontré esta solución. No sé si está haciendo su trabajo (supongo que si, ya que no se ha roto nada (?))
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -43,6 +42,10 @@ app.use(session({
     saveUninitialized: true
 }))
 
+initializePassport();
+
+app.use(passport.initialize());
+app.use(passport.session());
 app.use('/api/products', routerProd)
 app.use('/api/carts', routerCart)
 app.use('/views', viewsRouter)
@@ -56,7 +59,7 @@ io.on('connection', async (socket) => {
 
     const chatList = await chatManager.showMessages()
     const prods = await productManager.getProducts()
-    
+
     socket.emit('chatLoad', chatList)
 
     socket.on('new-message', async (data) => {
@@ -68,9 +71,7 @@ io.on('connection', async (socket) => {
             console.log(err)
         }
     })
-    
 })
-
 
 server.listen(PORT, () => {
     console.log(`Server run on port ${PORT}`)

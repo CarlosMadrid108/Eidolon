@@ -66,14 +66,14 @@ export class CartManager {
         }
     }
 
-    async deleteProducts(cid){
-        try{
-            await carts.updateOne({_id:cid}, { $set: { products: [] }});
+    async deleteProducts(cid) {
+        try {
+            await carts.updateOne({ _id: cid }, { $set: { products: [] } });
             return true
-        }catch(err){
+        } catch (err) {
             console.log(err)
             return false
         }
-        
+
     }
 }

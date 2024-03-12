@@ -33,7 +33,7 @@ export class ProductManager {
         if (!sort && filter) {
             const prods = await products.paginate({ category: filter }, { limit: limit, page: pg })
 
-            const list =  {
+            const list = {
                 payload: prods.docs,
                 totalPages: prods.totalPages,
                 prevPage: prods.prevPage,

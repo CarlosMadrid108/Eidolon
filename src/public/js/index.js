@@ -22,8 +22,6 @@ function render(data) {
     document.getElementById('pag').innerHTML = `<strong>Página: ${data.page}, </strong>`
 }
 
-
-
 //Render de todos los productos
 socket.on('list', (data) => {
     render(data)
