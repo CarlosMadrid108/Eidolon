@@ -1,5 +1,6 @@
 import passport from "passport";
 import local from "passport-local"
+import GitHubStrategy from "passport-github2"
 
 import users from "../models/user.model.js";
 import { createHash } from "../utils/bcrypt.js";
@@ -46,6 +47,40 @@ const initializePassport = () => {
             return done(error)
         }
     }))
+
+//Para el caso de los usuarios de github que no tienen configurado su "Public email"
+//email aparece como email:null
+//Tuve que modificiar mi perfil para poder enviar ese dato
+    passport.use('github', new GitHubStrategy(
+        {
+            clientID:"Iv1.d34042c07954e8e3",
+            clientSecret:"77166bb7330826e9b9e0ce247ae62ce2dfbe913b",
+            callbackURL:"http://localhost:8080/api/sessions/callbackGithub",
+        },
+        async(accessToken, refreshToken, profile, done)=>{
+            try {
+                //console.log(profile)
+                let {name, email} = profile._json
+                let usuario = await users.findOne({email})
+                if(!usuario){
+                    usuario = await users.create(
+                        {
+                            first_name: name,
+                            last_name: "",
+                            age: 18,
+                            email,
+                            github: profile,
+                            password:"",
+                        }
+                    )
+
+                }
+                return done(null, usuario)
+            } catch (error) {
+                return done(error)
+            }
+        }
+    ))
 
     passport.serializeUser((user, done) => {
         done(null, user._id)

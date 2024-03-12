@@ -24,9 +24,13 @@ const userSchema = new mongoose.Schema({
 
     role: {
         type: String
-    }
-
-})
+    },
+},
+{
+    timestamps:true,
+    strict:false
+},
+)
 
 const users = mongoose.model('users', userSchema)
 

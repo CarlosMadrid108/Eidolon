@@ -31,6 +31,16 @@ routerSessions.get('/faillogin', (req, res)=> {
     res.send({error:"Failed Login"})
 })
 
+routerSessions.get('/github', passport.authenticate('github', {}), (req, res)=>{})
+routerSessions.get('/callbackGithub', passport.authenticate('github', {}), (req, res)=>{
+
+    req.session.user = req.user
+
+    res.redirect('/views/realTimeProducts/?page=1')  
+    // res.setHeader('Content-Type', 'application/json');
+    // return res.status(200).json({payload:req.user})
+})
+
 routerSessions.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
