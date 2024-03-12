@@ -71,6 +71,7 @@ const initializePassport = () => {
                             email,
                             github: profile,
                             password:"",
+                            role: "Usuario",
                         }
                     )
 
