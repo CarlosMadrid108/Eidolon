@@ -7,19 +7,19 @@ const cartManager = new CartManager()
 
 const routerViews = Router();
 
-function loggedOut (req, res, next){
-    if (req.session.user){
+function loggedOut(req, res, next) {
+    if (req.session.user) {
         res.send('No tienes acceso')
-    }else{
+    } else {
         next()
-        
+
     }
 }
 
-function loggedIn (req, res, next){
-    if (req.session.user){
+function loggedIn(req, res, next) {
+    if (req.session.user) {
         next()
-    }else{
+    } else {
         res.send('No tienes acceso')
     }
 }
@@ -30,16 +30,19 @@ routerViews.get('/realTimeProducts', loggedIn, async (req, res) => {
     let { category } = req.query
     let { page } = req.query
     let { sort } = req.query
- 
+
     const prods = await productManager.getProducts(limit, category, page, sort)
-    .then(res.render('home', {first_name: req.session.user.first_name}))
+        .then(res.render('home', { 
+            first_name: req.session.user.first_name,
+            cart: req.session.user.cart,
+         }))
 })
 
 //http://localhost:8080/views/carts/65de1959bf90cca4f2f98877
 routerViews.get('/carts/:cid', loggedIn, async (req, res) => {
-    const {cid} = req.params
+    const { cid } = req.params
     const prods = await cartManager.getProducts(cid)
-    .then(res.render('cart', {}))
+        .then(res.render('cart', {}))
 })
 
 //http://localhost:8080/views/chat
@@ -69,5 +72,10 @@ routerViews.get('/profile', loggedIn, (req, res) => {
         role: req.session.user.role,
     })
 })
+
+routerViews.get('*', async (req, res) => {
+    res.status(404).render('404', {})
+}
+)
 
 export default routerViews

@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
     },
 
     email: {
-        type: String
+        type: String,
+        unique: true
     },
 
     age: {
@@ -21,9 +22,14 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String
     },
+    cart:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'carts'
+    },
 
     role: {
-        type: String
+        type: String,
+        default: 'user'
     },
 },
 {

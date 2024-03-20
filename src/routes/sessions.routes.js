@@ -22,9 +22,11 @@ routerSessions.post('/login', passport.authenticate('login', {failureRedirect:'/
         last_name : req.user.last_name,
         age: req.user.age,
         email: req.user.email,
+        cart: req.user.cart,
         role: req.user.role,
     }
-    res.redirect('/views/realTimeProducts/?page=1')  
+    //res.redirect('/views/realTimeProducts/?page=1')
+    res.redirect('/api/sessions/current')  
 })
 
 routerSessions.get('/faillogin', (req, res)=> {
@@ -50,6 +52,10 @@ routerSessions.get('/logout', (req, res) => {
         }
 
     })
+})
+
+routerSessions.get('/current', (req, res) => {
+    res.send(req.session.user)
 })
 
 export default routerSessions

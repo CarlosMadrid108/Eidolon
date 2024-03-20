@@ -20,7 +20,8 @@ export class CartManager {
     }
 
     async addCart() {
-        await carts.create({ products: [] })
+       const newCart = await carts.create({ products: [] })
+       return newCart
     }
 
     async addProduct(pid, cid) {
