@@ -3,9 +3,9 @@ import carts from '../models/cart.model.js'
 import products from '../models/product.model.js'
 import { io } from '../../../index.js'
 
-export class CartManager {
+export class CartServices {
 
-    async getProducts(cid) {
+    async findProducts(cid) {
 
         try {
             const prod = await carts.findById(cid).populate('products.product')
@@ -19,12 +19,12 @@ export class CartManager {
         }
     }
 
-    async addCart() {
+    async createCart() {
        const newCart = await carts.create({ products: [] })
        return newCart
     }
 
-    async addProduct(pid, cid) {
+    async pushProduct(pid, cid) {
 
         const myCart = await carts.findById(cid)
         const prod = await products.findById(pid)
@@ -57,7 +57,7 @@ export class CartManager {
         }
     }
 
-    async deleteProduct(cid, pid) {
+    async deleteOneProduct(cid, pid) {
         try {
             await carts.findOneAndUpdate({ _id: cid }, { $pull: { products: { product: pid } } }, { new: true })
             return true
@@ -67,7 +67,7 @@ export class CartManager {
         }
     }
 
-    async deleteProducts(cid) {
+    async deleteAllProducts(cid) {
         try {
             await carts.updateOne({ _id: cid }, { $set: { products: [] } });
             return true
@@ -75,6 +75,5 @@ export class CartManager {
             console.log(err)
             return false
         }
-
     }
 }

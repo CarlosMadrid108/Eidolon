@@ -1,9 +1,9 @@
 import { io } from '../../../index.js'
 import products from '../models/product.model.js'
 
-export class ProductManager {
+export class ProductServices {
 
-    async getProducts(limit, filter, pg, sort) {
+    async paginateProducts(limit, filter, pg, sort) {
 
 
         if (!pg) {
@@ -81,7 +81,7 @@ export class ProductManager {
     }
 
 
-    async getProductById(pid) {
+    async findByIdProducts(pid) {
         try {
             const prod = await products.findById(pid)
             return prod
@@ -90,7 +90,7 @@ export class ProductManager {
         }
     }
 
-    async addProduct(prod) {
+    async createProduct(prod) {
         try {
             await products.create(prod)
             const prods = await products.find()
@@ -102,7 +102,7 @@ export class ProductManager {
         }
     }
 
-    async updateProduct(pid, producto) {
+    async updateOneProduct(pid, producto) {
         try {
             await products.updateOne({ _id: pid }, producto)
             const prods = await products.find()
@@ -114,7 +114,7 @@ export class ProductManager {
         }
     }
 
-    async deleteProduct(pid) {
+    async deleteOneProduct(pid) {
         try {
             await products.deleteOne({ _id: pid })
             const prods = await products.find()

@@ -3,7 +3,7 @@ import local from "passport-local"
 import GitHubStrategy from "passport-github2"
 
 import users from "../models/user.model.js";
-import { CartManager } from "../managers/cartManager.js";
+import { CartServices } from "../services/cartServices.js";
 import { createHash } from "../utils/bcrypt.js";
 import { isValidPassword } from "../utils/bcrypt.js";
 
@@ -13,9 +13,9 @@ const initializePassport = () => {
     passport.use('register', new LocalStrategy(
         { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
             const { first_name, last_name, email, age } = req.body;
-            try {
-                const cartManager = new CartManager
-                let myCart = await cartManager.addCart()
+            try {  
+                const cartServices = new CartServices       
+                let myCart = await cartServices.createCart();
                 let user = await users.findOne({ email: username });
                 if (user) {
                     console.log('Usuario ya existe');
@@ -63,7 +63,9 @@ const initializePassport = () => {
         },
         async(accessToken, refreshToken, profile, done)=>{
             try {
-                //console.log(profile)
+                const cartServices = new CartServices       
+                let myCart = await cartServices.createCart();
+
                 let {name, email} = profile._json
                 let usuario = await users.findOne({email})
                 if(!usuario){
@@ -75,7 +77,7 @@ const initializePassport = () => {
                             email,
                             github: profile,
                             password:"",
-                            role: "Usuario",
+                            cart: myCart._id
                         }
                     )
 

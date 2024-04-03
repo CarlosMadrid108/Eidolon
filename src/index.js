@@ -4,18 +4,14 @@ import path from 'path';
 import { fileURLToPath } from 'url'
 import http from 'http'
 import { Server } from "socket.io";
-import { ChatManager } from "./dao/db/managers/chatManager.js";
-import { ProductManager } from "./dao/db/managers/productManager.js";
+import { ChatServices } from "./dao/db/services/chatServices.js";
+import { ProductServices } from "./dao/db/services/productServices.js";
 import db from "./dao/db/db.js"
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import passport from "passport";
-import initializePassport from "./dao/db/passport/passport.js"; 
-
-import routerProd from "./routes/products.routes.js"
-import routerCart from "./routes/carts.routes.js"
-import viewsRouter from "./routes/views.routes.js"
-import routerSessions from "./routes/sessions.routes.js";
+import initializePassport from "./dao/db/config/passport.js"; 
+import routerIndex from "./routes/index.routes.js";
 
 const PORT = 8080;
 const app = express();
@@ -46,26 +42,23 @@ initializePassport();
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/api/products', routerProd)
-app.use('/api/carts', routerCart)
-app.use('/views', viewsRouter)
-app.use('/api/sessions', routerSessions)
+app.use(routerIndex)
 
 export const io = new Server(server)
 io.on('connection', async (socket) => {
 
-    const chatManager = new ChatManager()
-    const productManager = new ProductManager()
+    const chatServices = new ChatServices()
+    const productServices = new ProductServices()
 
-    const chatList = await chatManager.showMessages()
-    const prods = await productManager.getProducts()
+    const chatList = await chatServices.showMessages()
+    const prods = await productServices.paginateProducts()
 
     socket.emit('chatLoad', chatList)
 
     socket.on('new-message', async (data) => {
         try {
-            const msgs = await chatManager.addMessage(data)
-            const chat = await chatManager.showMessages()
+            const msgs = await chatServices.addMessage(data)
+            const chat = await chatServices.showMessages()
             socket.emit('mensajes', chat)
         } catch (err) {
             console.log(err)
