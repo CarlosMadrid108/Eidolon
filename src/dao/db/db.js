@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
+import config from "./config/config.js";
 
 const db = {
     connect: async () => {
-        return mongoose.connect("mongodb+srv://cmadrid1985:BKK36LGrIKqQ9fgy@eidolon.wvfjtau.mongodb.net/ecommerce")
+        return mongoose.connect(config.mongoUrl)
             .then(() => {
                 console.log("Base de datos conectada")
             }).catch((err) => {

@@ -12,8 +12,9 @@ import MongoStore from "connect-mongo";
 import passport from "passport";
 import initializePassport from "./dao/db/config/passport.js"; 
 import routerIndex from "./routes/index.routes.js";
+import config from "./dao/db/config/config.js";
 
-const PORT = 8080;
+const PORT = config.port;
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -31,9 +32,9 @@ app.set('views', __dirname + '/views')
 
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: 'mongodb+srv://cmadrid1985:BKK36LGrIKqQ9fgy@eidolon.wvfjtau.mongodb.net/ecommerce'
+        mongoUrl: config.mongoUrl
     }),
-    secret: 'secretCoder',
+    secret: config.sessionSecret,
     resave: true,
     saveUninitialized: true
 }))
