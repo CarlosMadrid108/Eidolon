@@ -1,18 +1,15 @@
 import { Router } from "express";
-import { getProducts, addCart, addProduct, deleteProduct, deleteProducts } from "../dao/db/controllers/cartController.js";
+import { CartConstructors } from "../dao/factory.js";
+import { PoliciesContructor } from "../dao/factory.js";
 
-//IDs de carritos
-//65cc0b29c5107242c849f70b
-//65cc90030d43c6ca255667da
-//65de190a08e5074ae91de2d6
-//65de1959bf90cca4f2f98877
-
+const cartController = new CartConstructors;
+const policies = new PoliciesContructor
 const routerCart = Router();
 
-routerCart.get('/:cid', getProducts)
-routerCart.post('/', addCart)
-routerCart.post('/:cid/product/:pid', addProduct)
-routerCart.delete('/:cid/products/:pid', deleteProduct)
-routerCart.delete('/:cid', deleteProducts)
+routerCart.get('/:cid', policies.handlePolicies(["USER", "ADMIN"]), cartController.getProducts)
+routerCart.post('/', cartController.addCart)
+routerCart.post('/:cid/product/:pid', policies.handlePolicies(["USER", "ADMIN"]), cartController.addProduct)
+routerCart.delete('/:cid/products/:pid', policies.handlePolicies(["USER", "ADMIN"]), cartController.deleteProduct)
+routerCart.delete('/:cid', policies.handlePolicies(["USER", "ADMIN"]), cartController.deleteProducts)
 
 export default routerCart

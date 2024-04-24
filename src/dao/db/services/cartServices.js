@@ -5,13 +5,23 @@ import { io } from '../../../index.js'
 
 export class CartServices {
 
+    async findProduct(pid) {
+        try{
+            const prod = await products.findById(pid)
+            return prod
+        }catch (err) {
+            console.log(err)
+            return false
+        }
+    }
+
     async findProducts(cid) {
 
         try {
             const prod = await carts.findById(cid).populate('products.product')
-            io.emit('carrito', prod.products)
+            io.emit('carrito', prod)
 
-            return prod.products
+            return prod
 
         } catch (err) {
             console.log(err)
@@ -34,7 +44,7 @@ export class CartServices {
         }
 
         const exists = await carts.findOne({
-            _id: myCart._id,
+            _id: cid,
             "products.product": prod._id,
         });
 
@@ -56,6 +66,7 @@ export class CartServices {
             return true
         }
     }
+
 
     async deleteOneProduct(cid, pid) {
         try {

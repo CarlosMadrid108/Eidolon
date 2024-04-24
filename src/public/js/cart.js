@@ -1,7 +1,10 @@
 const socket = io()
 
 function render(data) {
-    const html = data.map(elem => {
+
+        const prods = data.products
+
+    const html = prods.map(elem => {
         return (`
             <div>
             <div>
