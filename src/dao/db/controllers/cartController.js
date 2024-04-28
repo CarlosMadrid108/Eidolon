@@ -60,4 +60,15 @@ export default class MongoCartController {
         }
     }
 
+    async purchaseProducts (req, res, next) {
+        const { cid } = req.params
+
+        const prods = await cartServices.purchaseProducts(cid)
+
+        if (prods) {
+            res.status(200).send(prods)
+        } else {
+            res.status(404).send("No se encuentra el producto o el carrito")
+        }
+    }
 }

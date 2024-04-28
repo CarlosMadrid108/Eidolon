@@ -5,7 +5,6 @@ import { fileURLToPath } from 'url'
 import http from 'http'
 import { Server } from "socket.io";
 import { ChatServices } from "./dao/db/services/chatServices.js";
-import { ProductServices } from "./dao/db/services/productServices.js";
 import db from "./dao/db/db.js"
 import session from "express-session";
 import MongoStore from "connect-mongo";
@@ -14,7 +13,6 @@ import initializePassport from "./dao/db/config/passport.js";
 import routerIndex from "./routes/index.routes.js";
 import config from "./config/config.js";
 import cookieParser from "cookie-parser";
-import carts from "./dao/db/models/cart.model.js";
 
 const PORT = config.port;
 const app = express();
@@ -56,18 +54,17 @@ io.on('connection', async (socket) => {
 
     socket.emit('chatLoad', chatList)
 
-    // socket.on('new-message', async (data) => {
-    //     try {
+    socket.on('new-message', async (data) => {
+        try {
 
-    //         console.log("recibido")
-    //         //const msgs = await chatServices.addMessage(data)
-    //         await chat.create(data)
-    //         const chat = await chatServices.showMessages()
-    //         socket.emit('mensajes', chat)
-    //     } catch (err) {
-    //         console.log(err)
-    //     }
-    // })
+            const msgs = await chatServices.addMessage(data)
+            await chat.create(data)
+            const chat = await chatServices.showMessages()
+            socket.emit('mensajes', chat)
+        } catch (err) {
+            console.log(err)
+        }
+    })
 })
 
 server.listen(PORT, () => {

@@ -11,8 +11,6 @@ export default class MongoProductController {
         let { page } = req.query
         let { sort } = req.query
 
-        console.log(page)
-
         let cart = req.session.user.cart
 
         const prods = await productServices.paginateProducts(limit, category, page, sort)
@@ -58,4 +56,5 @@ export default class MongoProductController {
             res.status(404).send("No se encuentra el producto")
         }
     }
+
 }

@@ -24,10 +24,14 @@ export class ViewsController {
     async viewCart (req, res, next) {
         const { cid } = req.params
         const prods = await cartServices.findProducts(cid)
-            .then(res.render('cart', {}))
+            .then(res.render('cart', {id: cid}))
     }
     
     async chat (req, res, next) {
+        if(!req.session.user || req.session.user.role === "admin"){
+            res.render('noPostingChat', {})
+            return
+        }
         res.render('chat', {})
     }
 
@@ -75,6 +79,10 @@ export const viewCart = async (req, res, next) =>{
 }
 
 export const chat = async (req, res, next) => {
+    
+    if(!req.session.user || req.session.user.role === "admin"){
+        res.render('noPostingChat', {})
+    }
     res.render('chat', {})
 }
 

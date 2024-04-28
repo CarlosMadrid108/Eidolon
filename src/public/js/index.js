@@ -39,7 +39,6 @@ function render() {
     fetch(URLproductos)
         .then((resultado) => resultado.json())
         .then((data) => {
-            console.log(data);
             const listaProductos = data.payload;
             document.getElementById('pag').innerHTML = `<strong>Página: ${data.page}, </strong>`
             for (const prod of listaProductos) {

@@ -7,21 +7,21 @@ const viewsController = new ViewsController
 const policies = new PoliciesContructor
 
 //http://localhost:8080/views/realTimeProducts/?page=1
-routerViews.get('/realTimeProducts', policies.handlePolicies(["USER", "ADMIN"]), viewsController.realTimeProducts)
+routerViews.get('/realTimeProducts', policies.handlePolicies(["USER","ADMIN"]), viewsController.realTimeProducts)
 
 //http://localhost:8080/views/carts/65de1959bf90cca4f2f98877
-routerViews.get('/carts/:cid', policies.handlePolicies(["USER", "ADMIN"]), viewsController.viewCart)
+routerViews.get('/carts/:cid', policies.handlePolicies(["USER"]), viewsController.viewCart)
 
 //http://localhost:8080/views/chat
-routerViews.get('/chat', viewsController.chat)
+routerViews.get('/chat', policies.handlePolicies(["USER","ADMIN"]), viewsController.chat)
 
 // adminCoder@coder.com
 // adminCod3r123
 //http://localhost:8080/views/login
-routerViews.get('/login', policies.handlePolicies(["PUBLIC", "ADMIN"]),viewsController.login)
+routerViews.get('/login', policies.handlePolicies(["PUBLIC"]),viewsController.login)
 
 //http://localhost:8080/views/register
-routerViews.get('/register', policies.handlePolicies(["PUBLIC", "ADMIN"]), viewsController.register)
+routerViews.get('/register', policies.handlePolicies(["PUBLIC"]), viewsController.register)
 
 //http://localhost:8080/views/profile
 routerViews.get('/profile', policies.handlePolicies(["USER", "ADMIN"]), viewsController.profile)

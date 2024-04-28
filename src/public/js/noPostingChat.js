@@ -14,22 +14,6 @@ const render = (data) => {
     document.getElementById('chat_caja').innerHTML = html
 }
 
-const addMessage = () => {
-    const msg = {
-        user: document.getElementById('mail').value,
-        message: document.getElementById('text').value
-    }
-    socket.emit('new-message', msg)
-    document.getElementById("chat_form").reset();
-    return false
-}
-
-socket.on('mensajes', (data) => {
-    render(data)
-    let box = document.getElementById('chat_caja')
-    box.scrollTop = box.scrollHeight
-})
-
 socket.on('chatLoad', (data) => {
     render(data)
     let box = document.getElementById('chat_caja')

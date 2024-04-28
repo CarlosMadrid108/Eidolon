@@ -3,7 +3,7 @@ export class MongoPolicies {
 
     handlePolicies = policies => (req, res, next) => {
 
-        if (policies[0] === "USER" && policies[1] === "ADMIN") {
+        if (policies[1] === "ADMIN") {
             if (req.session.user) {
                 next()
             } else {
@@ -11,8 +11,22 @@ export class MongoPolicies {
             }
         }
 
-        if (policies[0] === "PUBLIC" && policies[1] === "ADMIN") {
-            if (!req.session.user || req.session.user.role === "admin") {
+        
+        if (policies[0] === "USER" && policies[1] === undefined) {
+            if(!req.session.user){
+                res.send("No tienes acceso")
+                return
+            }
+
+            if (req.session.user.role=== "user") {
+                next()
+            } else {
+                res.send("No tienes acceso")
+            }
+        }
+
+        if (policies[0] === "PUBLIC") {
+            if (!req.session.user) {
                 next()
             } else {
                 res.send("No tienes acceso")
@@ -31,14 +45,5 @@ export class MongoPolicies {
                 res.send("No tienes autorización")
             }
         }
-    }
-}
-
-export const onlyUSer = (req, res, next) => {
-    if (req.session.user){
-        if (req.session.user.role === admin){
-            res.send("No autorizado")
-        }
-        next()
     }
 }

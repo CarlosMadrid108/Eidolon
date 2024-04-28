@@ -1,22 +1,8 @@
-{{!-- <div>
+<div>
     <form id="chat_form" onsubmit="return addMessage()">
         <input id="mail" placeholder="Correo" required>
         <textarea id="text" placeholder="Mensaje" required></textarea>
         <button type="submit">Enviar</button>
-    </form>
-</div>
-<div id="chat_caja" class="chat_caja"></div>
-</div>
-
-<script src="/socket.io/socket.io.js"></script>
-
-<script src="/js/chat.js"></script> --}}
-
-<div>
-    <form  action="/api/chat/addMessage" method="post">
-        <input type="text" name="user" required>
-        <input type="text" name="message" required></textarea>
-        <button type="submit" value="Enviar">Enviar</button>
     </form>
 </div>
 <div id="chat_caja" class="chat_caja"></div>
