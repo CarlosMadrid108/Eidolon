@@ -133,7 +133,7 @@ export class CartServices {
 
             let email = await transporter.sendMail({
                 from: "Eidolon <cmadrid1985@gmail.com>",
-                to: "cmadrid.108@hotmail.com",
+                to: user.email,
                 subject: "Compra efectuada",
                 text: "Compra efectuada",
                 html: `<div>
