@@ -57,4 +57,13 @@ export default class MongoProductController {
         }
     }
 
+    async generateProducts(req, res, next) {
+        const conf = await productServices.generateRandomProducts()
+        if (conf) {
+            res.status(201).send("Productos creados")
+        } else {
+            res.status(404).send("No se encuentra el producto")
+        }
+    }
+
 }

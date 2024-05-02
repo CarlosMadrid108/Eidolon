@@ -12,5 +12,6 @@ routerProd.get('/:pid', policies.handlePolicies(["USER","ADMIN"]), productContro
 routerProd.post('/', policies.handlePolicies(["ADMIN"]), productController.addProduct)
 routerProd.put('/:pid', policies.handlePolicies(["ADMIN"]), productController.updateProduct)
 routerProd.delete('/:pid', policies.handlePolicies(["ADMIN"]), productController.deleteProduct)
+routerProd.post('/mockingproducts', policies.handlePolicies(["ADMIN"]), productController.generateProducts)
 
 export default routerProd

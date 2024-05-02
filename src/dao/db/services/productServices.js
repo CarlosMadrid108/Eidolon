@@ -1,5 +1,6 @@
 import { io } from '../../../index.js'
 import products from '../models/product.model.js'
+import { faker } from "@faker-js/faker/locale/es"
 
 export class ProductServices {
 
@@ -123,6 +124,38 @@ export class ProductServices {
 
             return true
         } catch {
+            return false
+        }
+    }
+
+    async generateRandomProducts() {
+        try {
+
+            for (let i = 0; i < 100; i++) {
+                const prod = {
+                    title: faker.commerce.productName(),
+                    description: faker.commerce.productDescription(),
+                    code: faker.number.int({ min: 0, max: 8000 }),
+                    price: faker.commerce.price(),
+                    status: true,
+                    stock: faker.number.int({ min: 0, max: 20 }),
+                    category: faker.commerce.productAdjective(),
+                    thumbnail: [faker.image.urlPlaceholder()]
+                }
+
+            const title = await products.findOne({ title: prod.title })
+            const code = await products.findOne({ code: prod.code})
+       
+                if (title || code){
+                    console.log("Duplicate")
+                } else {  await products.create(prod) }
+    
+            }
+
+            return true
+
+        } catch (err) {
+            console.log(err)
             return false
         }
     }

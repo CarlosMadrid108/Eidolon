@@ -46,7 +46,8 @@ function render() {
             <div>
              <div>
            <strong>Product: ${prod.title}, </strong>
-            <strong>Price: ${prod.price}</strong>
+            <strong>Price: ${prod.price}, </strong>
+            <strong>Stock: ${prod.stock}</strong>
              <form action="/api/carts/${data.cart}/product/${prod._id}" method="post">
              <button name="add" value="agregar">Agregar al Carrito</button>
             </form>
