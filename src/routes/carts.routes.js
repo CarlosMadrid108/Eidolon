@@ -6,7 +6,7 @@ const cartController = new CartConstructors;
 const policies = new PoliciesContructor
 const routerCart = Router();
 
-routerCart.get('/:cid',  policies.handlePolicies(["USER"]), cartController.getProducts)
+routerCart.get('/:cid', policies.handlePolicies(["USER"]), cartController.getProducts)
 routerCart.post('/', policies.handlePolicies(["USER"]), cartController.addCart)
 routerCart.post('/:cid/product/:pid', policies.handlePolicies(["USER"]), cartController.addProduct)
 routerCart.delete('/:cid/products/:pid', policies.handlePolicies(["USER"]), cartController.deleteProduct)
