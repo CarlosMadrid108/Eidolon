@@ -6,6 +6,7 @@ import users from "../models/user.model.js";
 import { CartServices } from "../services/cartServices.js";
 import { createHash } from "../utils/bcrypt.js";
 import { isValidPassword } from "../utils/bcrypt.js";
+import { logger } from "../../../config/logger.js";
 
 const LocalStrategy = local.Strategy;
 
@@ -19,7 +20,7 @@ const initializePassport = () => {
                 let myCart = await cartServices.createCart();
                 let user = await users.findOne({ email: username });
                 if (user) {
-                    console.log('Usuario ya existe');
+                    logger.warning(`Usuario ya existe - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
                     return done(null, false)
                 }
 
@@ -34,6 +35,7 @@ const initializePassport = () => {
                 let result = await users.create(newUser)
                 return done(null, result)
             } catch (error) {
+                logger.error(`${error} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
                 return done("Error al obtener usuario " + error)
             }
         }
@@ -43,12 +45,13 @@ const initializePassport = () => {
         try {
             const user = await users.findOne({ email: username })
             if (!user) {
-                console.log("No existe el usuario");
+                logger.warning(`No existe es usuario - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
                 return done(null, false);
             }
             if (!isValidPassword(user, password)) return done(null, false);
             return done(null, user);
         } catch (error) {
+            logger.error(`${error} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return done(error)
         }
     }))
@@ -85,6 +88,7 @@ const initializePassport = () => {
                 }
                 return done(null, usuario)
             } catch (error) {
+                logger.error(`${error} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
                 return done(error)
             }
         }

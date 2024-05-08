@@ -2,7 +2,8 @@ import { logger } from "../../../config/logger.js";
 
 export default class TestController {
 
-    async loggerTest(req, res, next) {
+    async loggerTest(req, res) {
+
     logger.fatal("Prueba de log level fatal --> en Endpoint")
     logger.error("Prueba de log level error --> en Endpoint")
     logger.warning("Prueba de log level warning --> en Endpoint")
