@@ -4,6 +4,10 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "prod": "nodemon src/index.js --mode production"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

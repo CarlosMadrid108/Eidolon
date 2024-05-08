@@ -89,7 +89,7 @@ export const addLogger = (req, res, next) => {
 
 //Por ello he creado un logger diferente de la única forma que se me ocurrió (con un poco de ayuda) para poder usarla con libertad en el proyecto
 //el cual varía sus opciones dependiendo del entorno y de acuerdo a los requerimientos de la entrega
-//Este logger se está usando en los siguientes archivos del proyexcto:
+//Este logger se está usando en los siguientes archivos del proyecto:
 //cartServices.js
 //productServices.js
 //testController.js
@@ -99,7 +99,7 @@ export const addLogger = (req, res, next) => {
 //Primero lo importo y luego lo llamo, por ejemplo, con un "logger.info("")"
 //No se si está forma de implementarlo es correcta pero es lo único que se me ocurrió al no saber como usar el código que se vió en clase
 //El endpoint para probarlo es /loggerTest
-//Sus archivos están en index.routes.js y testController.js
+//Su código en index.routes.js y testController.js
 
 let transportsOptions
 
