@@ -1,0 +1,14 @@
+{"level":"http","message":"GET en /api/products/ - at 7/5/2024 03:46:31"}
+{"level":"warn","message":"GET en /api/products/ - at 7/5/2024 03:46:31"}
+{"level":"http","message":"GET en /api/products/ - at 7/5/2024 03:48:51"}
+{"level":"http","message":"GET en /api/products/ - at 7/5/2024 03:50:35"}
+{"level":"http","message":"POST en /api/products/ - at 7/5/2024 03:51:48"}
+{"level":"http","message":"POST en /api/products/ - at 7/5/2024 03:52:41"}
+{"level":"http","message":"POST en /api/products/ - at 7/5/2024 03:54:01"}
+{"level":"http","message":"POST en /api/products/ - at 7/5/2024 03:55:10"}
+{"level":"warn","message":"POST en /api/products/ - at 7/5/2024 03:55:10"}
+{"level":"warn","message":"Prueba"}
+{"level":"http","message":"GET en /api/products/ - at 7/5/2024 03:56:38"}
+{"level":"http","message":"GET en /api/products/ - at 7/5/2024 03:58:02"}
+{"level":"http","message":"GET en /api/products/ - at 7/5/2024 04:02:57"}
+{"level":"warn","message":"GET en /api/products/ - at 7/5/2024 04:02:57"}

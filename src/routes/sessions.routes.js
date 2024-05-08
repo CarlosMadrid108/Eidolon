@@ -8,9 +8,6 @@ const routerSessions = Router();
 const sessionController = new SessionConstructors
 const policies = new PoliciesContructor
 
-// adminCoder@coder.com
-// adminCod3r123
-
 routerSessions.post('/register', policies.handlePolicies(["PUBLIC"]), passport.authenticate(registerStrategy,{failureRedirect:'/api/sessions/failregister'}), sessionController.register)
 routerSessions.get('/failregister', policies.handlePolicies(["PUBLIC"]), sessionController.failRegister)
 routerSessions.post('/login', policies.handlePolicies(["PUBLIC"]), passport.authenticate(loginStrategy, {failureRedirect:'/api/sessions/faillogin'}), sessionController.login)

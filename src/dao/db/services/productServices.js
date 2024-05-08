@@ -1,11 +1,11 @@
 import { io } from '../../../index.js'
 import products from '../models/product.model.js'
 import { faker } from "@faker-js/faker/locale/es"
+import { logger } from '../../../config/logger.js'
 
 export class ProductServices {
 
     async paginateProducts(limit, filter, pg, sort) {
-
 
         if (!pg) {
             pg = 1
@@ -85,20 +85,26 @@ export class ProductServices {
     async findByIdProducts(pid) {
         try {
             const prod = await products.findById(pid)
+            logger.info(`Product: ${prod} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return prod
         } catch (err) {
-            console.log(err)
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
         }
     }
 
     async createProduct(prod) {
+
+
         try {
             await products.create(prod)
+            console.log(prod)
+            logger.info(`New product created at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             const prods = await products.find()
             //emit
             io.emit('productos', prods)
             return true
         } catch (err) {
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false
         }
     }
@@ -106,11 +112,13 @@ export class ProductServices {
     async updateOneProduct(pid, producto) {
         try {
             await products.updateOne({ _id: pid }, producto)
+            logger.info(`Product updated at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             const prods = await products.find()
             //emit
             io.emit('productos', prods)
             return true
-        } catch {
+        } catch (err) {
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false
         }
     }
@@ -118,12 +126,14 @@ export class ProductServices {
     async deleteOneProduct(pid) {
         try {
             await products.deleteOne({ _id: pid })
+            logger.info(`Product deleted at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             const prods = await products.find()
             //emit
             io.emit('productos', prods)
 
             return true
-        } catch {
+        } catch (err) {
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false
         }
     }
@@ -143,19 +153,22 @@ export class ProductServices {
                     thumbnail: [faker.image.urlPlaceholder()]
                 }
 
-            const title = await products.findOne({ title: prod.title })
-            const code = await products.findOne({ code: prod.code})
-       
-                if (title || code){
-                    console.log("Duplicate")
-                } else {  await products.create(prod) }
-    
+                const title = await products.findOne({ title: prod.title })
+                const code = await products.findOne({ code: prod.code })
+
+                if (title || code) {
+                    logger.warning(`Duplicated product generated and not added - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+                } else {
+                    logger.info(`Products generated at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+                    await products.create(prod)
+                }
+
             }
 
             return true
 
         } catch (err) {
-            console.log(err)
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false
         }
     }

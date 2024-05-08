@@ -13,6 +13,8 @@ import initializePassport from "./dao/db/config/passport.js";
 import routerIndex from "./routes/index.routes.js";
 import config from "./config/config.js";
 import cookieParser from "cookie-parser";
+import { addLogger } from "./config/logger.js";
+import { logger } from "./config/logger.js";
 
 
 const PORT = config.port;
@@ -45,6 +47,7 @@ initializePassport();
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(addLogger)
 app.use(routerIndex)
 
 export const io = new Server(server)
@@ -63,12 +66,12 @@ io.on('connection', async (socket) => {
             const chat = await chatServices.showMessages()
             socket.emit('mensajes', chat)
         } catch (err) {
-            console.log(err)
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
         }
     })
 })
 
 server.listen(PORT, () => {
-    console.log(`Server run on port ${PORT}`)
+    logger.info(`Server run on port ${PORT} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
     db.connect();
 })

@@ -6,15 +6,18 @@ import users from '../models/user.model.js'
 import transporter from '../../../config/nodemailer.js'
 import { io } from '../../../index.js'
 import uuid4 from 'uuid4'
+import { logger } from '../../../config/logger.js'
+
 
 export class CartServices {
 
     async findProduct(pid) {
         try {
             const prod = await products.findById(pid)
+            logger.info(`Product: ${prod} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return prod
         } catch (err) {
-            console.log(err)
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false
         }
     }
@@ -28,13 +31,14 @@ export class CartServices {
             return prod
 
         } catch (err) {
-            console.log(err)
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false
         }
     }
 
     async createCart() {
         const newCart = await carts.create({ products: [] })
+        logger.info(`New cart was added - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
         return newCart
     }
 
@@ -55,7 +59,7 @@ export class CartServices {
         if (!exists) {
             myCart.products.push({ product: prod._id, quantity: 1 })
             await carts.updateOne({ _id: cid }, myCart)
-
+            logger.info(`New product was added to cart (id: ${cid}) - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return true
         } else {
             await carts.updateOne({
@@ -67,6 +71,7 @@ export class CartServices {
                 }
             }
             )
+            logger.info(`New product was added to cart (id: ${cid}) - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return true
         }
     }
@@ -75,9 +80,10 @@ export class CartServices {
     async deleteOneProduct(cid, pid) {
         try {
             await carts.findOneAndUpdate({ _id: cid }, { $pull: { products: { product: pid } } }, { new: true })
+            logger.info(`A product was deleted form the cart (id: ${cid}) - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return true
         } catch (err) {
-            console.log(err)
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false
         }
     }
@@ -85,9 +91,10 @@ export class CartServices {
     async deleteAllProducts(cid) {
         try {
             await carts.updateOne({ _id: cid }, { $set: { products: [] } });
+            logger.info(`All products were deleted from the cart (id: ${cid}) - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return true
         } catch (err) {
-            console.log(err)
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false
         }
     }
@@ -145,14 +152,14 @@ export class CartServices {
                         </div>`
             })
             if (!!email.messageId) {
-                console.log('Mensaje Enviado', email.messageId)
+                logger.info(`Mensaje enviado ${email.messageId} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             }
 
             return "Compra realizada con éxito, revise su correo"
 
 
         } catch (err) {
-            console.log(err)
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false
         }
     }

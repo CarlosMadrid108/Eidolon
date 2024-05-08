@@ -17,6 +17,8 @@ export default class MongoProductController {
         let cart = req.session.user.cart
 
         const prods = await productServices.paginateProducts(limit, category, page, sort)
+
+        
         res.status(200).send({ cart, ...prods })
     }
 
@@ -32,6 +34,7 @@ export default class MongoProductController {
     }
 
     async addProduct(req, res, next) {
+
         const { title, description, code, price, status, stock, category, thumbnail } = req.body
 
         if (!title || !description || !code || !price || !status || !stock || !category ){
