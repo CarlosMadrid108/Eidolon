@@ -1,3 +1,4 @@
+import products from "../models/product.model.js";
 import { CartServices } from "../services/cartServices.js";
 
 const cartServices = new CartServices
@@ -25,6 +26,12 @@ export default class MongoCartController {
     async addProduct (req, res, next){
         const { cid } = req.params
         const { pid } = req.params
+        
+        const checkProd = await products.findById(pid)
+        if(checkProd.owner === req.session.user.email){
+            res.status(200).send("No puedes agregar al carrito un producto que te pertenece")
+            return
+        }
     
         const prod = await cartServices.pushProduct(pid, cid)
     

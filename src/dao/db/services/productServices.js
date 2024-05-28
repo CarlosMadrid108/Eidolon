@@ -85,6 +85,7 @@ export class ProductServices {
     async findByIdProducts(pid) {
         try {
             const prod = await products.findById(pid)
+            console.log(prod)
             logger.info(`Product: ${prod} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return prod
         } catch (err) {
@@ -97,7 +98,6 @@ export class ProductServices {
 
         try {
             await products.create(prod)
-            console.log(prod)
             logger.info(`New product created at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             const prods = await products.find()
             //emit
@@ -125,6 +125,12 @@ export class ProductServices {
 
     async deleteOneProduct(pid) {
         try {
+            const prod = await products.findById(pid)
+
+            if(!prod){
+                return false
+            }
+
             await products.deleteOne({ _id: pid })
             logger.info(`Product deleted at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             const prods = await products.find()
@@ -150,6 +156,7 @@ export class ProductServices {
                     status: true,
                     stock: faker.number.int({ min: 0, max: 20 }),
                     category: faker.commerce.productAdjective(),
+                    owner: "admin",
                     thumbnail: [faker.image.urlPlaceholder()]
                 }
 
@@ -159,7 +166,7 @@ export class ProductServices {
                 if (title || code) {
                     logger.warning(`Duplicated product generated and not added - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
                 } else {
-                    logger.info(`Products generated at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+                    logger.info(`Product generated at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
                     await products.create(prod)
                 }
 
@@ -167,6 +174,19 @@ export class ProductServices {
 
             return true
 
+        } catch (err) {
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+            return false
+        }
+    }
+
+    async addFieldsToAllProducts(field) {
+        try {
+            const result = await products.updateMany({}, {
+                $set: field
+            });
+            logger.info(`Resultado de la actualización: ${result} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+            return true
         } catch (err) {
             logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false

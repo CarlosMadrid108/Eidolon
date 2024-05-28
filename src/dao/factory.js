@@ -2,15 +2,15 @@ import config from '../config/config.js';
 import MongoCartController from './db/controllers/cartController.js';
 import MongoProductController from './db/controllers/productController.js';
 import MongoSessionController from './db/controllers/sessionController.js';
-import { MongoPolicies } from './db/config/policies.js';
+import MongoUserController from './db/controllers/userController.js';
 
 
 export let CartConstructors
 export let ProductContructors
 export let SessionConstructors
-export let PoliciesContructor
 export let loginStrategy
 export let registerStrategy
+export let UserConstructors
 
 switch(config.persistence){
 
@@ -18,7 +18,7 @@ switch(config.persistence){
     CartConstructors = MongoCartController
     ProductContructors = MongoProductController
     SessionConstructors = MongoSessionController
-    PoliciesContructor = MongoPolicies
+    UserConstructors = MongoUserController
     loginStrategy = 'login'
     registerStrategy = 'register'
     break;

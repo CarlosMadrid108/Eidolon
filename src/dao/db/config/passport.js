@@ -30,7 +30,9 @@ const initializePassport = () => {
                     email,
                     age,
                     password: createHash(password),
-                    cart: myCart._id
+                    cart: myCart._id,
+                    resetPasswordToken: null,
+                    resetPasswordExpires: null
                 }
                 let result = await users.create(newUser)
                 return done(null, result)

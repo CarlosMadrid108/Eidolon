@@ -3,6 +3,7 @@ import routerCart from "./carts.routes.js"
 import viewsRouter from "./views.routes.js"
 import routerSessions from "./sessions.routes.js";
 import TestController from "../dao/db/controllers/testController.js";
+import routerUsers from "./user.routes.js";
 
 
 
@@ -16,6 +17,7 @@ routerIndex.use('/api/products', routerProd)
 routerIndex.use('/api/carts', routerCart)
 routerIndex.use('/views', viewsRouter)
 routerIndex.use('/api/sessions', routerSessions)
+routerIndex.use('/user', routerUsers)
 
 routerIndex.get('/loggerTest', testController.loggerTest)
 routerIndex.get("/", (req, res) => {

@@ -1,19 +1,18 @@
 import { Router } from "express";
 import { ProductContructors } from "../dao/factory.js";
-import { PoliciesContructor } from "../dao/factory.js";
+import { handlePolicies } from "../dao/db/config/policies.js";
 import errorHandler from "../dao/db/services/Errors/middlewares/index.js";
-
-const policies = new PoliciesContructor
 
 const routerProd = Router();
 const productController = new ProductContructors
 
-routerProd.get('/', policies.handlePolicies(["USER","ADMIN"]), productController.getProducts)
-routerProd.get('/:pid', policies.handlePolicies(["USER","ADMIN"]), productController.getProductById)
-routerProd.post('/', productController.addProduct)
-routerProd.put('/:pid', policies.handlePolicies(["ADMIN"]), productController.updateProduct)
-routerProd.delete('/:pid', policies.handlePolicies(["ADMIN"]), productController.deleteProduct)
-routerProd.post('/mockingproducts', policies.handlePolicies(["ADMIN"]), productController.generateProducts)
+routerProd.get('/', handlePolicies(["user","admin","premium"]), productController.getProducts)
+routerProd.get('/:pid', handlePolicies(["user","admin","premium"]), productController.getProductById)
+routerProd.post('/', handlePolicies(["admin","premium"]), productController.addProduct)
+routerProd.put('/:pid', handlePolicies(["admin"]), productController.updateProduct)
+routerProd.delete('/:pid', handlePolicies(["admin","premium"]), productController.deleteProduct)
+routerProd.post('/mockingproducts', handlePolicies(["admin"]), productController.generateProducts)
+routerProd.post('/addFields', handlePolicies(["admin"]), productController.addFieldsToAll)
 routerProd.use(errorHandler)
 
 

@@ -13,7 +13,6 @@ import initializePassport from "./dao/db/config/passport.js";
 import routerIndex from "./routes/index.routes.js";
 import config from "./config/config.js";
 import cookieParser from "cookie-parser";
-import { addLogger } from "./config/logger.js";
 import { logger } from "./config/logger.js";
 
 
@@ -47,7 +46,7 @@ initializePassport();
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(addLogger)
+
 app.use(routerIndex)
 
 export const io = new Server(server)
