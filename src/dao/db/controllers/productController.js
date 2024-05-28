@@ -89,8 +89,6 @@ export default class MongoProductController {
 
         const conf = await productServices.deleteOneProduct(pid)
 
-        
-
         if (conf) {
             res.status(201).send("Producto eliminado")
         } else {

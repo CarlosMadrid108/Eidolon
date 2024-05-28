@@ -98,7 +98,7 @@ export class ProductServices {
 
         try {
             await products.create(prod)
-            logger.info(`New product created at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+            logger.info(`New product was created at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             const prods = await products.find()
             //emit
             io.emit('productos', prods)

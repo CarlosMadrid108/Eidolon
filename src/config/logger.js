@@ -60,48 +60,6 @@ const prodLogger = winston.createLogger({
     ]
 })
 
-//Está función para los loggers es la que vimos en clase, la verdad nuncá entendí que proposito cumple
-//ya que dispara todos sus logs cuando utilizo cualquiera de los endpoints
-//y me llena toda la consola de notificaciones molestas
-//al ser implementada de la forma que se vió en la clase
-//Tampoco he sabido como aplicarla a los requerimientos de la entrega
-//No comprendo como reemplazar los console.log de cualquier archivo al estar sujeto a la limitación del req.logger
-
-export const addLogger = (req, res, next) => {
-
-
-    if (config.environment === "production") {
-        req.logger = prodLogger;
-
-        req.logger.http(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-        req.logger.warning(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-        req.logger.debug(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-
-
-    } else {
-        req.logger = devLogger;
-
-        req.logger.http(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-        req.logger.warning(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-        req.logger.debug(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-    }
-    next();
-}
-
-//Por ello he creado un logger diferente de la única forma que se me ocurrió (con un poco de ayuda) para poder usarla con libertad en el proyecto
-//el cual varía sus opciones dependiendo del entorno y de acuerdo a los requerimientos de la entrega
-//Este logger se está usando en los siguientes archivos del proyecto:
-//cartServices.js
-//productServices.js
-//testController.js
-//db.js
-//passport.js
-//index.js
-//Reemplazando los console.log que estaban antes
-//Primero lo importo y luego lo llamo, por ejemplo, con un "logger.info("")"
-//No se si está forma de implementarlo es correcta pero es lo único que se me ocurrió al no saber como usar el código que se vió en clase
-//El endpoint para probarlo es /loggerTest
-//Su código en index.routes.js y testController.js
 
 let transportsOptions
 
