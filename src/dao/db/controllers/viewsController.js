@@ -63,7 +63,7 @@ export class ViewsController {
         const user = await users.findOne({resetPasswordToken: token})
 
         if(!user){
-            res.send("No existe el usuario")
+            res.redirect('/views/resetPasswordRequest')
             return
         }
 

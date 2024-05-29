@@ -19,8 +19,12 @@ export default class MongoProductController {
 
         const prods = await productServices.paginateProducts(limit, category, page, sort)
 
+        if (prods){
+            res.status(200).send({ cart, ...prods })
+        } else {
+            res.status(500).send("Error inesperado en el server, no se puede manejar el proceso.")
+        }
         
-        res.status(200).send({ cart, ...prods })
     }
 
     async getProductById(req, res, next) {
@@ -54,10 +58,21 @@ export default class MongoProductController {
         // }
 
         if (req.session.user.role === "premium"){
-            await productServices.createProduct({...req.body, owner: req.session.user.email})
+           const prod = await productServices.createProduct({...req.body, owner: req.session.user.email})
+
+            if (!prod){
+                res.status(400).send("El producto ya existe / falta uno o más campos")
+                return
+            }
+
             res.status(201).send("Producto creado")
         } else {
-            await productServices.createProduct({...req.body, owner: "admin"})
+            const prod = await productServices.createProduct({...req.body, owner: "admin"})
+
+            if (!prod){
+                res.status(400).send("El producto ya existe / falta uno o más campos")
+                return
+            }
         
             res.status(201).send("Producto creado")
         }
@@ -71,7 +86,7 @@ export default class MongoProductController {
         if (conf) {
             res.status(201).send("Producto actualizado")
         } else {
-            res.status(404).send("No se encuentra el producto / falta uno o más campos")
+            res.status(400).send("No se encuentra el producto / falta uno o más campos")
         }
     }
 
@@ -113,7 +128,7 @@ export default class MongoProductController {
         if (update) {
             res.status(200).send("Productos actualizados")
         } else {
-            res.status(404).send("Error al actualizar")
+            res.status(400).send("Error al actualizar")
         }
 
     }

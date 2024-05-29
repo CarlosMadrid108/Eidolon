@@ -14,7 +14,7 @@ import routerIndex from "./routes/index.routes.js";
 import config from "./config/config.js";
 import cookieParser from "cookie-parser";
 import { logger } from "./config/logger.js";
-
+import swaggerRoutes from "./routes/swagger.routes.js";
 
 const PORT = config.port;
 const app = express();
@@ -47,6 +47,7 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(swaggerRoutes)
 app.use(routerIndex)
 
 export const io = new Server(server)
@@ -69,6 +70,7 @@ io.on('connection', async (socket) => {
         }
     })
 })
+
 
 server.listen(PORT, () => {
     logger.info(`Server run on port ${PORT} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)

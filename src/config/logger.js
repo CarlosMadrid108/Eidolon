@@ -22,45 +22,6 @@ const customLevelsOptions = {
 
 winston.addColors(customLevelsOptions.colors)
 
-const devLogger = winston.createLogger({
-    levels: customLevelsOptions.levels,
-
-    transports: [
-        new winston.transports.Console(
-            {
-                level: "debug",
-                format: winston.format.combine(
-                    winston.format.colorize({ colors: customLevelsOptions.colors }),
-                    winston.format.simple()
-                )
-            }
-        ),
-    ]
-})
-
-const prodLogger = winston.createLogger({
-    levels: customLevelsOptions.levels,
-    transports: [
-        new winston.transports.Console(
-            {
-                level: "info",
-                format: winston.format.combine(
-                    winston.format.colorize({ colors: customLevelsOptions.colors }),
-                    winston.format.simple()
-                )
-            }
-        ),
-        new winston.transports.File(
-            {
-                filename: './erros.log',
-                level: "error",
-                format: winston.format.simple()
-            }
-        )
-    ]
-})
-
-
 let transportsOptions
 
 if (config.environment === "production") {
