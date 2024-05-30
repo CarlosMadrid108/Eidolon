@@ -93,22 +93,24 @@ export default class MongoProductController {
     async deleteProduct(req, res, next) {
         const { pid } = req.params
         const prod = await products.findById(pid)
-        
-        if(req.session.user.role==="premium") {
+
+        if (prod){
+            if(req.session.user.role==="premium") {
             
-            if(req.session.user.email != prod.owner){
-                res.status(404).send("No puedes eliminar un producto que no está en tu lista")
-                return
+                if(req.session.user.email != prod.owner){
+                    res.status(404).send("No puedes eliminar un producto que no está en tu lista")
+                    return
+                }
+
             }
-        }
 
-        const conf = await productServices.deleteOneProduct(pid)
+            await productServices.deleteOneProduct(pid)
+            res.status(204).send("Producto eliminado")
 
-        if (conf) {
-            res.status(201).send("Producto eliminado")
         } else {
             res.status(404).send("No se encuentra el producto")
         }
+        
     }
 
     async generateProducts(req, res, next) {
@@ -116,7 +118,7 @@ export default class MongoProductController {
         if (conf) {
             res.status(201).send("Productos creados")
         } else {
-            res.status(404).send("No se encuentra el producto")
+            res.status(500).send("Error inesperado en el servidor")
         }
     }
 
@@ -126,9 +128,9 @@ export default class MongoProductController {
         const update = await productServices.addFieldsToAllProducts(field)
 
         if (update) {
-            res.status(200).send("Productos actualizados")
+            res.status(201).send("Productos actualizados")
         } else {
-            res.status(400).send("Error al actualizar")
+            res.status(500).send("Error inesperado en el servidor")
         }
 
     }

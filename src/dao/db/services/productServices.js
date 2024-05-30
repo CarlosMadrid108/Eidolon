@@ -85,7 +85,6 @@ export class ProductServices {
     async findByIdProducts(pid) {
         try {
             const prod = await products.findById(pid)
-            console.log(prod)
             logger.info(`Product: ${prod} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return prod
         } catch (err) {

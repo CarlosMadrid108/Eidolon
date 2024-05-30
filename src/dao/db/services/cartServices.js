@@ -37,9 +37,14 @@ export class CartServices {
     }
 
     async createCart() {
-        const newCart = await carts.create({ products: [] })
-        logger.info(`New cart was added - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-        return newCart
+        try {
+            const newCart = await carts.create({ products: [] })
+            logger.info(`New cart was added - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+            return newCart
+        } catch (err) {
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+            return false
+        }
     }
 
     async pushProduct(pid, cid) {
@@ -48,6 +53,10 @@ export class CartServices {
         const prod = await products.findById(pid)
 
         if (!myCart) {
+            return false
+        }
+
+        if (!prod) {
             return false
         }
 
@@ -79,9 +88,19 @@ export class CartServices {
 
     async deleteOneProduct(cid, pid) {
         try {
-            await carts.findOneAndUpdate({ _id: cid }, { $pull: { products: { product: pid } } }, { new: true })
-            logger.info(`A product was deleted form the cart (id: ${cid}) - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-            return true
+            const exists = await carts.findOne({
+                _id: cid,
+                "products.product": pid,
+            });
+
+            if (!exists) {
+                return false
+            } else {
+                await carts.findOneAndUpdate({ _id: cid }, { $pull: { products: { product: pid } } }, { new: true })
+                logger.info(`A product was deleted form the cart (id: ${cid}) - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+                return true
+            }
+
         } catch (err) {
             logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false
@@ -90,6 +109,7 @@ export class CartServices {
 
     async deleteAllProducts(cid) {
         try {
+            
             await carts.updateOne({ _id: cid }, { $set: { products: [] } });
             logger.info(`All products were deleted from the cart (id: ${cid}) - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return true
@@ -110,8 +130,8 @@ export class CartServices {
 
             const myCart = await carts.findById(cid)
 
-            if(myCart.products[0]==undefined){
-                
+            if (myCart.products[0] == undefined) {
+
                 return "No tienes productos en el carro"
             }
 
@@ -120,10 +140,10 @@ export class CartServices {
                 const product = await products.findById(prod.product._id)
 
                 if (prod.quantity < product.stock) {
-                    await products.findOneAndUpdate({_id : prod.product._id}, {$inc : {'stock' : -prod.quantity}})
+                    await products.findOneAndUpdate({ _id: prod.product._id }, { $inc: { 'stock': -prod.quantity } })
                     await carts.findOneAndUpdate({ _id: cid }, { $pull: { products: { product: prod.product._id } } }, { new: true })
                     amount = amount + prod.quantity
-                } else { 
+                } else {
                     noStock.push(prod._id.toString())
                 }
             }

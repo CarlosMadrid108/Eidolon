@@ -1,3 +1,193 @@
+paths:
+  
+  /api/carts/{cid}:
+
+    get:
+      summary: Obtiene todos los productos del carro solicitado
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        description: Parámetro con el id del carro
+        required: true
+        type: String
+      responses:
+        "200":
+          description: La operación fue exitosa. Se retorna el arreglo con los productos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Products'
+        "404":
+          description: El carro no existe
+        "401":
+          description: Usuario no está autenticado.
+        "403":
+          description: Usuario no está autorizado.
+
+    delete:
+      summary: Elimina todos los productos en el carro solicitado
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        description: Parámetro con el id del carro
+        required: true
+        type: String
+      responses:
+        "200":
+          description: La operación fue exitosa.
+        "404":
+          description: No se encuentra el carro.
+        "401":
+          description: Usuario no está autenticado.
+        "403":
+          description: Usuario no está autorizado.
+
+  /api/carts/:
+
+    post:
+      summary: Crea un nuevo carro
+      tags:
+        - Carts
+      responses:
+        "201":
+          description: La operación fue exitosa.
+        "500":
+          description: Error inesperado en el servidor.
+        "401":
+          description: Usuario no está autenticado.
+        "403":
+          description: Usuario no está autorizado.
+ 
+  /api/carts/{cid}/products/{pid}:
+
+    post:
+      summary: Añade un producto al carro solicitado
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        description: Parámetro con el id del carro
+        required: true
+        type: String
+      - name: pid
+        in: path
+        description: Parámetro con el id del producto
+        required: true
+        type: String
+      responses:
+        "201":
+          description: La operación fue exitosa.
+        "400":
+          description: No se puede agregar un producto que ha sido creado por el propio usuario.
+        "404":
+          description: No se encuentra el producto o el carro.
+        "401":
+          description: Usuario no está autenticado.
+        "403":
+          description: Usuario no está autorizado.
+          
+    delete:
+      summary: Elimina un producto en el carro solicitado
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        description: Parámetro con el id del carro
+        required: true
+        type: String
+      - name: pid
+        in: path
+        description: Parámetro con el id del producto
+        required: true
+        type: String
+      responses:
+        "200":
+          description: La operación fue exitosa.
+        "404":
+          description: No se encuentra el producto o el carro.
+        "401":
+          description: Usuario no está autenticado.
+        "403":
+          description: Usuario no está autorizado.
+
+  /api/carts/{cid}/purchase/:
+
+    post:
+      summary: Genera un ticket de compra y envía un correo electrónico a la dirección del usuario
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        description: Parámetro con el id del carro
+        required: true
+        type: String
+      responses:
+        "200":
+          description: La operación fue exitosa.
+        "404":
+          description: No se encuentra el producto o el carro.
+        "401":
+          description: Usuario no está autenticado.
+        "403":
+          description: Usuario no está autorizado.
+      
+
+
+components:
+  schemas:
+    Products: 
+      type: object
+      properties:
+        _id: 
+          type: ObjectId
+          description: Id autogenerado de MongoDB.
+        title: 
+          type: String
+          description: Nombre del producto
+        description:
+          type: String
+          description: Descripción del producto
+        code:
+          type: Number
+          description: Código del producto
+        price:
+          type: Number
+          description: Precio del producto
+        status:
+          type: Boolean
+          description: Status del producto
+        stock:
+          type: Number
+          description: Número de productos disponibles en stock
+        category:
+          type: String
+          description: Categoría a la que pertenece el producto
+        thumbnail:
+          type: Array
+          description: Enlaces con miniaturas de imágenes del producto
+        owner:
+          type: String
+          description: Idetificador del usuario que agregó el producto     
+      example: 
+        _id: ObjectId("647fa8c9e46dbc5a20320181")
+        title: Producto de prueba 1
+        description: Descripción de prueba 1
+        code: 213414514
+        price: 234
+        status: true
+        stock: 30
+        category: Categoría de prueba 1
+        thumbnail: []
+        owner: admin
 
 
 

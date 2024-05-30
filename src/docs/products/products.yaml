@@ -1,5 +1,6 @@
 paths: 
   /api/products/:
+   
     get:
       summary: Obtiene todos los productos disponibles en la aplicación
       tags:
@@ -18,6 +19,7 @@ paths:
           description: Error inesperado en el server, no se puede manejar el proceso.
         "401":
           description: Usuario no está autenticado.
+  
     post:
       summary: Crea un nuevo producto
       tags:
@@ -36,9 +38,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Products'
         "400":
-          description: El producto ya existe / Falta uno o más campos
+          description: Error al crear producto. Puede que ya exista o que se haya igresado de un id de producto inexistente.
+        "401":
+          description: Usuario no está autenticado.
+        "403":
+          description: Usuario no está autorizado.
 
   /api/products/{pid}:
+   
     get:
       summary: Obtiene un producto a través del id ingresado
       tags:
@@ -48,7 +55,7 @@ paths:
         in: path
         description: Parámetro con el id del producto
         required: true
-        type: string
+        type: String
       responses:
         "200":
           description: El producto cuyo id coincide con el que se ha ingresado
@@ -58,6 +65,9 @@ paths:
                 $ref: '#/components/schemas/Products'
         "404":
           description: El producto no ha sido encontrado
+        "401":
+          description: Usuario no está autenticado.     
+
     put:
       summary: Actualiza un producto
       tags:
@@ -67,13 +77,13 @@ paths:
         in: path
         description: Parámetro que toma el id del producto
         required: true
-        type: string
+        type: String
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/requestBodies/NewProduct'
+              $ref: '#/components/requestBodies/UpdateProduct'
       responses:
         "200":
           description: El producto se actualizó.
@@ -83,6 +93,61 @@ paths:
                 $ref: '#/components/requestBodies/NewProduct'
         "400":
           description: El producto no ha sido encontrado / Falta uno o más campos
+        "401":
+          description: Usuario no está autenticado.
+        "403":
+          description: Usuario no está autorizado.
+ 
+    delete:
+      summary: Elimina el producto que coincide con el id ingresado
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        description: Parámetro que toma el id del producto
+        required: true
+        type: String
+      responses:
+        "204":
+          description: No hay información adicional
+        "404":
+          description: El producto no ha sido encontrado
+        "401":
+          description: Usuario no está autenticado.
+        "403":
+          description: Usuario no está autorizado.
+ 
+  /api/products/mockingproducts/:
+    post:
+      summary: Genera 100 productos aleatorios (si el nombre o el código del producto coincide con uno existente no es agregado)
+      tags:
+        - Products
+      responses:
+        "201":
+          description: Se crearon los productos
+        "500":
+          description: Error inesperado en el servidor
+  /api/products/addFields/:
+    post:
+      summary: Añade los campos ingresados en todos los productos por medio de un objeto en el req.body
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/AddFields'
+      responses:
+        "201":
+          description: Se añadieron los campos ingresados
+        "500":
+          description: Error inesperado en el servidor
+        "401":
+          description: Usuario no está autenticado.
+        "403":
+          description: Usuario no está autorizado.
 
 components:
   schemas:
@@ -134,8 +199,13 @@ components:
     NewProduct:
       type: object
       required:
-        - nombre
-        - precio
+        - title
+        - description
+        - code
+        - price
+        - status
+        - stock
+        - category
       properties:
         title:
           type: String
@@ -170,4 +240,46 @@ components:
         stock: 30
         category: Categoría de prueba 1
         thumbnail: []
+    UpdateProduct:
+      type: object
+      properties:
+        title:
+          type: String
+          description: Título del producto.
+        description:
+          type: String
+          description: Descripción del producto.
+        code:
+          type: Number
+          description: Código del producto
+        price:
+          type: Number
+          description: Precio del producto
+        status:
+          type: Boolean
+          description: Status del producto
+        stock:
+          type: Number
+          description: Cantidad de unidades del producto en el stock
+        category:
+          type: String
+          description: Categoría en que la que el producto está clasificado
+        thumbnail:
+          type: Array
+          description: Colección de enlaces de las miniaturas del producto
+      example: 
+        title: Producto de prueba 1
+        description: Descripción de prueba 1
+        code: 213414514
+        price: 234
+        status: true
+        stock: 30
+        category: Categoría de prueba 1
+        thumbnail: []
+    AddFields:
+      type: object
+      example: 
+        Nuevo campo 1: Nuevo campo 1
+        Nuevo campo 2: Nuevo campo 2
+
 
