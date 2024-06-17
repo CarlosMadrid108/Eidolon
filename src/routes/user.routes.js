@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { UserConstructors } from "../dao/factory.js";
 import { handlePolicies, onlyGuests } from "../dao/db/config/policies.js";
+import { uploader } from "../dao/db/utils/multer.js";
 
 const routerUsers = Router();
 
@@ -10,6 +11,29 @@ routerUsers.post('/manage/requestResetPasword', onlyGuests, userController.reque
 routerUsers.post('/manage/resetPassword/:token', onlyGuests, userController.resetPassword)
 routerUsers.post('/addFields', handlePolicies(["admin"]), userController.addFieldsToAll)
 routerUsers.post('/premium/:uid', userController.changeRole)
+
+routerUsers.post("/:uid/documents", uploader.fields(
+
+    [
+        {
+            name: 'profile'
+        },
+        {
+            name: 'product'
+        },
+
+        {
+            name: 'id'
+        },
+        {
+            name: 'home'
+        },
+        {
+            name: 'account'
+        }
+    ]
+
+), userController.uploadDocuments)
 
 export default routerUsers
 

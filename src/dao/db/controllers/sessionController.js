@@ -1,3 +1,5 @@
+import users from "../models/user.model.js";
+
 export default class MongoSessionController {
 
     constructor(){}
@@ -12,6 +14,12 @@ export default class MongoSessionController {
     }
 
     async login(req, res, next) {
+
+        const user = await users.findOne({email: req.body.email})
+        user.last_connection = Date.now()
+        await user.save();
+
+
         if (!req.user) return res.status(400).send({ status: "error", error: "Invalid credentials" })
         req.session.user = {
             first_name: req.user.first_name,
@@ -21,7 +29,6 @@ export default class MongoSessionController {
             cart: req.user.cart,
             role: req.user.role,
         }
-        //res.send("Inciaste Sesión")
         res.redirect('/views/realTimeProducts/?page=1')
     }
 
@@ -36,6 +43,10 @@ export default class MongoSessionController {
     }
 
     async logout (req, res, next) {
+        const user = await users.findOne({email: req.session.user.email})
+        user.last_connection = Date.now()
+        await user.save();
+
         req.session.destroy(err => {
             if (err) {
                 res.send('Error en Logout')

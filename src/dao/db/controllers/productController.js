@@ -15,11 +15,16 @@ export default class MongoProductController {
         let { page } = req.query
         let { sort } = req.query
 
-        let cart = req.session.user.cart
-
         const prods = await productServices.paginateProducts(limit, category, page, sort)
+        
 
         if (prods){
+            if(!req.session.user){
+                res.status(200).send(prods)
+                return
+            }
+
+            let cart = req.session.user.cart
             res.status(200).send({ cart, ...prods })
         } else {
             res.status(500).send("Error inesperado en el server, no se puede manejar el proceso.")

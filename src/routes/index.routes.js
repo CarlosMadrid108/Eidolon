@@ -19,6 +19,7 @@ routerIndex.use('/views', viewsRouter)
 routerIndex.use('/api/sessions', routerSessions)
 routerIndex.use('/user', routerUsers)
 
+
 routerIndex.get('/loggerTest', testController.loggerTest)
 routerIndex.get("/", (req, res) => {
     res.redirect('/views/login')

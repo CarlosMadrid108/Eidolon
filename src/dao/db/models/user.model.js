@@ -31,6 +31,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'user'
     },
+
+    documents: [{
+        name: {type: String},
+        reference: {type: String},
+        type: {type: String}
+    }],
+
+    last_connection: {
+        type: Date,
+        default: null
+    },
+
     resetPasswordToken: {
         type: String,
         default: null

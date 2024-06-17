@@ -80,6 +80,18 @@ export class UserServices {
             }
             
             if (user.role==="user"){
+
+                console.log(user.documents)
+
+                const id = user.documents.find(({ type }) => type === "Identificación");
+                const home = user.documents.find(({ type }) => type === "Comprobante de domicilio");
+                const account = user.documents.find(({ type }) => type === "Comprobante de estado de cuenta");
+
+                if(!id || !home || !account){
+                    logger.info(`user does not meet the requirements  - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+                    return false
+                }
+
                 user.role = "premium"
                 await user.save()
                 logger.info(`User (_id: ${user._id}) role modified - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
@@ -111,4 +123,5 @@ export class UserServices {
             return false
         }
     }
+
 }

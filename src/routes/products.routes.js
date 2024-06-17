@@ -6,7 +6,7 @@ import errorHandler from "../dao/db/services/Errors/middlewares/index.js";
 const routerProd = Router();
 const productController = new ProductContructors
 
-routerProd.get('/', handlePolicies(["user","admin","premium"]), productController.getProducts)
+routerProd.get('/',  productController.getProducts)
 routerProd.get('/:pid', handlePolicies(["user","admin","premium"]), productController.getProductById)
 routerProd.post('/', handlePolicies(["admin","premium"]), productController.addProduct)
 routerProd.put('/:pid', handlePolicies(["admin"]), productController.updateProduct)

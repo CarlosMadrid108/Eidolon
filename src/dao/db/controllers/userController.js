@@ -73,4 +73,97 @@ export default class MongoUserController {
         }
 
     }
+
+    async uploadDocuments(req, res, next){
+        const { uid } = req.params
+
+        //console.log(req.files)
+    
+        if (!req.files) {
+            return res.status(400).send({ status: "error", mensaje: "No se adjunto archivo." });
+        }
+        
+        if(req.files.profile){
+            
+            for (const elem of req.files.profile){
+    
+                let file = {
+                    name: elem.originalname,
+                    reference: elem.path,
+                    type: 'Foto de Perfil'
+                }
+    
+                const user = await users.findById(uid)
+                user.documents.push(file)
+                await user.save();
+            }
+        }
+    
+        if(req.files.product){
+            
+            for (const elem of req.files.product){
+    
+                let file = {
+                    name: elem.originalname,
+                    reference: elem.path,
+                    type: 'Producto'
+                }
+    
+                const user = await users.findById(uid)
+                user.documents.push(file)
+                await user.save();
+            }
+        }
+    
+        if(req.files.id){
+            
+            for (const elem of req.files.id){
+    
+                let file = {
+                    name: elem.originalname,
+                    reference: elem.path,
+                    type: 'Identificación'
+                }
+    
+                const user = await users.findById(uid)
+                user.documents.push(file)
+                await user.save();
+            }
+        }
+    
+        if(req.files.home){
+            
+            for (const elem of req.files.home){
+    
+                let file = {
+                    name: elem.originalname,
+                    reference: elem.path,
+                    type: 'Comprobante de domicilio'
+                }
+    
+                const user = await users.findById(uid)
+                user.documents.push(file)
+                await user.save();
+            }
+        }
+    
+        if(req.files.account){
+            
+            for (const elem of req.files.account){
+    
+                let file = {
+                    name: elem.originalname,
+                    reference: elem.path,
+                    type: 'Comprobante de estado de cuenta'
+                }
+    
+                const user = await users.findById(uid)
+                user.documents.push(file)
+                await user.save();
+            }
+        }
+        
+       res.send({ status: "Success", message: `Documentos agregados con éxito` });
+    }
+
 }
