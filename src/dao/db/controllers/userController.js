@@ -15,6 +15,7 @@ export default class MongoUserController {
 
         if (request) {
             res.status(200).send("Revise su correo electrónico")
+            
         } else {
             res.status(404).send("No existe el usuario")
         }
@@ -163,7 +164,43 @@ export default class MongoUserController {
             }
         }
         
-       res.send({ status: "Success", message: `Documentos agregados con éxito` });
+        res.send({ status: "Success", message: `Documentos agregados con éxito` });
+    }
+
+    async deleteUser(req, res, next){
+        const {uid} = req.params
+
+        const user = await userServices.delete(uid)
+
+        if(user){
+            res.status(204).send("Usuario eliminado con éxito ")
+        } else {
+            res.status(404).send("No se encuentra el usuario")
+        }
+    }
+
+    async findUserbyEmail(req, res, next){
+
+        const email = req.body
+
+        const user = await userServices.findByEmail({email: email.email})
+
+        if(user){
+            res.status(200).send(user)
+        } else {
+            res.status(404).send("No se encuentra el usuario")
+        }
+
+    }
+
+    async getAllUsers(req, res, next){
+        const allUsers = await userServices.getUsers()
+        if(allUsers){
+            res.status(200).send(allUsers)
+        } else {
+            res.status(500).send("Error inesperado en el servidor")
+        }
+
     }
 
 }

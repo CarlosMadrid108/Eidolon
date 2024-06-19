@@ -15,6 +15,7 @@ const initializePassport = () => {
     passport.use('register', new LocalStrategy(
         { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
             const { first_name, last_name, email, age } = req.body;
+
             try {  
                 const cartServices = new CartServices       
                 let myCart = await cartServices.createCart();

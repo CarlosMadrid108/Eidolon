@@ -124,4 +124,55 @@ export class UserServices {
         }
     }
 
+    async delete(uid){
+        try{
+
+            const exist = await users.findById(uid)
+
+            if (!exist){
+                return false
+            }
+            const user = await users.deleteOne({_id: uid}) 
+            return true
+        }catch(err){
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+            return false
+        }
+
+    }
+
+    async findByEmail(email){
+        try{
+
+            const user = await users.findOne(email)
+
+            if (!user){
+                return false
+            }
+
+            return user
+
+
+        }catch(err){
+            logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+            return false
+        }
+
+    }
+
+
+    async getUsers(){
+
+        try{
+
+            const allUsers = await users.find()
+
+            return allUsers
+
+        }catch(err){
+            console.log(err)
+        }
+
+    }
+
 }

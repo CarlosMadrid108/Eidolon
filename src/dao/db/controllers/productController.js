@@ -7,7 +7,7 @@ import products from "../models/product.model.js";
 const productServices = new ProductServices
 
 export default class MongoProductController {
-    constructor(){}
+    constructor() { }
 
     async getProducts(req, res, next) {
         let { limit } = req.query
@@ -16,10 +16,10 @@ export default class MongoProductController {
         let { sort } = req.query
 
         const prods = await productServices.paginateProducts(limit, category, page, sort)
-        
 
-        if (prods){
-            if(!req.session.user){
+
+        if (prods) {
+            if (!req.session.user) {
                 res.status(200).send(prods)
                 return
             }
@@ -29,7 +29,7 @@ export default class MongoProductController {
         } else {
             res.status(500).send("Error inesperado en el server, no se puede manejar el proceso.")
         }
-        
+
     }
 
     async getProductById(req, res, next) {
@@ -47,10 +47,10 @@ export default class MongoProductController {
 
         let { title, description, code, price, status, stock, category, thumbnail } = req.body
 
-        if (!title || !description || !code || !price || !status || !stock || !category ){
+        if (!title || !description || !code || !price || !status || !stock || !category) {
             CustomError.createError({
                 name: "Product creation Error",
-                cause: generateProductErrorInfoSP({ title, description, code, price, status, stock, category}),
+                cause: generateProductErrorInfoSP({ title, description, code, price, status, stock, category }),
                 message: "Error tratando de crear el producto",
                 code: EErrors.INVALID_TYPES_ERROR
             })
@@ -62,25 +62,59 @@ export default class MongoProductController {
         //     res.status(400).send("El producto ya existe / falta uno o más campos")
         // }
 
-        if (req.session.user.role === "premium"){
-           const prod = await productServices.createProduct({...req.body, owner: req.session.user.email})
+        if (req.session.user) {
 
-            if (!prod){
-                res.status(400).send("El producto ya existe / falta uno o más campos")
-                return
+            if (req.session.user.role === "premium") {
+                const prod = await productServices.createProduct({ ...req.body, owner: req.session.user.email })
+
+                if (!prod) {
+                    res.status(400).send("El producto ya existe / falta uno o más campos")
+                    return
+                }
+
+                res.status(201).send("Producto creado")
+            } else {
+                const prod = await productServices.createProduct({ ...req.body, owner: "admin" })
+
+                if (!prod) {
+                    res.status(400).send("El producto ya existe / falta uno o más campos")
+                    return
+                }
+
+                res.status(201).send("Producto creado")
             }
 
-            res.status(201).send("Producto creado")
         } else {
-            const prod = await productServices.createProduct({...req.body, owner: "admin"})
 
-            if (!prod){
+            const prod = await productServices.createProduct({ ...req.body, owner: "admin" })
+
+            if (!prod) {
                 res.status(400).send("El producto ya existe / falta uno o más campos")
                 return
             }
-        
+
             res.status(201).send("Producto creado")
+
         }
+        // if (req.session.user.role === "premium") {
+        //     const prod = await productServices.createProduct({ ...req.body, owner: req.session.user.email })
+
+        //     if (!prod) {
+        //         res.status(400).send("El producto ya existe / falta uno o más campos")
+        //         return
+        //     }
+
+        //     res.status(201).send("Producto creado")
+        // } else {
+        //     const prod = await productServices.createProduct({ ...req.body, owner: "admin" })
+
+        //     if (!prod) {
+        //         res.status(400).send("El producto ya existe / falta uno o más campos")
+        //         return
+        //     }
+
+        //     res.status(201).send("Producto creado")
+        // }
 
 
     }
@@ -99,23 +133,30 @@ export default class MongoProductController {
         const { pid } = req.params
         const prod = await products.findById(pid)
 
-        if (prod){
-            if(req.session.user.role==="premium") {
-            
-                if(req.session.user.email != prod.owner){
-                    res.status(404).send("No puedes eliminar un producto que no está en tu lista")
-                    return
-                }
+        if (prod) {
 
+            if (req.session.user) {
+                if (req.session.user.role === "premium") {
+
+                    if (req.session.user.email != prod.owner) {
+                        res.status(404).send("No puedes eliminar un producto que no está en tu lista")
+                        return
+                    }
+                    await productServices.deleteOneProduct(pid)
+                    res.status(204).send("Producto eliminado")
+                    return
+
+                }
+            } else {
+                await productServices.deleteOneProduct(pid)
+                res.status(204).send("Producto eliminado")
             }
 
-            await productServices.deleteOneProduct(pid)
-            res.status(204).send("Producto eliminado")
 
         } else {
             res.status(404).send("No se encuentra el producto")
         }
-        
+
     }
 
     async generateProducts(req, res, next) {
