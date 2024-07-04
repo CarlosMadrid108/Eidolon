@@ -28,6 +28,7 @@ routerViews.get('/resetPassword/:token', onlyGuests, viewsController.resetPasswo
 
 //http://localhost:8080/views/profile
 routerViews.get('/profile', handlePolicies(["user", "admin","premium"]), viewsController.profile)
+routerViews.get('/manageUser/:uid',  viewsController.manageUser)
 
 routerViews.get('*', viewsController.error404)
 

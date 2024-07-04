@@ -2,6 +2,8 @@ import { io } from '../../../index.js'
 import products from '../models/product.model.js'
 import { faker } from "@faker-js/faker/locale/es"
 import { logger } from '../../../config/logger.js'
+import users from '../models/user.model.js'
+import transporter from '../../../config/nodemailer.js'
 
 export class ProductServices {
 
@@ -130,13 +132,37 @@ export class ProductServices {
                 return false
             }
 
+            const user = await users.findOne({email: prod.owner})
+
+            if (prod.owner === "admin"){
+                await products.deleteOne({ _id: pid })
+                logger.info(`Product deleted at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+                const prods = await products.find()
+                //emit
+                io.emit('productos', prods)
+    
+                return true
+            }
+
             await products.deleteOne({ _id: pid })
+
+            let email = transporter.sendMail({
+                from: "Eidolon <cmadrid1985@gmail.com>",
+                to: user.email,
+                subject: "Producto Eliminado",
+                text: `Su producto "${prod.title}" ha sido eliminado.`,
+            })
+            if (!!email.messageId) {
+                logger.info(`Mensaje enviado ${email.messageId} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
+            }
+
             logger.info(`Product deleted at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             const prods = await products.find()
             //emit
             io.emit('productos', prods)
 
             return true
+
         } catch (err) {
             logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             return false

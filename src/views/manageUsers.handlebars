@@ -1,0 +1,19 @@
+<div>
+    <div>
+        <h1>Modificación de usuario: {{first_name}} {{last_name}}</h1>
+    </div>
+    <ul>
+        <li>Nombre: {{first_name}} </li>
+        <li>Apellido: {{last_name}}</li>
+        <li>Correo: {{email}}</li>
+        <li>Edad: {{age}}</li>
+        <li>Rol: {{role}}</li>
+
+        <form action="/user/premium/{{id}}" method="post"><button name="rol" value="rol">Cambiar Rol</button></form>
+        <form action="/user/manage/delete/{{id}}" method="post">
+  
+  <button name="eliminar" value="eliminar">Eliminar usuario</button>
+</form>
+        
+    </ul>
+</div>

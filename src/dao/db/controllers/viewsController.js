@@ -77,7 +77,33 @@ export class ViewsController {
         })
     }
 
+    async manageUser (req, res, next) {
+        const { uid } = req.params
+
+        const user = await users.findById(uid)
+
+        if (!user){
+            res.status(404).send("Usuario no encontrado")
+
+            return
+        }
+
+        console.log(user)
+
+        res.render('manageUsers', {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            age: user.age,
+            role: user.role,
+            id: uid
+        })
+
+        //res.send(user)
+    }
+
     async error404 (req, res, next) {
         res.status(404).render('404', {})
     }
+
 }

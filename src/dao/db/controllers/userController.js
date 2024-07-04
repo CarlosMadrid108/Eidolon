@@ -56,9 +56,9 @@ export default class MongoUserController {
         const change = await userServices.changeRole(uid)
 
         if (change) {
-            res.status(200).send("Usuario actualizado")
+            res.status(200).send(change)
         } else {
-            res.status(404).send("Error al actualizar / El usuario no existe")
+            res.status(404).send(change)
         }
     }
 
@@ -173,7 +173,7 @@ export default class MongoUserController {
         const user = await userServices.delete(uid)
 
         if(user){
-            res.status(204).send("Usuario eliminado con éxito ")
+            res.send({ status: "Success", message: `Usuario eliminado con éxito` });
         } else {
             res.status(404).send("No se encuentra el usuario")
         }
@@ -201,6 +201,16 @@ export default class MongoUserController {
             res.status(500).send("Error inesperado en el servidor")
         }
 
+    }
+
+    async deleteInactiveUsers(req, res, next){
+        const result = await userServices.deleteInactive()
+
+        if(result){
+            res.status(204).send("Usuarios eliminados con éxito ")
+        } else {
+            res.status(500).send("Error inesperado en el servidor")
+        }
     }
 
 }

@@ -143,13 +143,19 @@ export default class MongoProductController {
                         return
                     }
                     await productServices.deleteOneProduct(pid)
-                    res.status(204).send("Producto eliminado")
+                    res.status(200).send("Producto eliminado")
                     return
 
                 }
+
+                await productServices.deleteOneProduct(pid)
+                res.status(200).send("Producto eliminado")
+                return
+
+
             } else {
                 await productServices.deleteOneProduct(pid)
-                res.status(204).send("Producto eliminado")
+                res.status(200).send("Producto eliminado")
             }
 
 

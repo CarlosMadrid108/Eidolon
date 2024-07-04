@@ -28,7 +28,7 @@ describe('Testing Users Dao', () => {
 
     it('El dao debe enviar un array con todos los usuarios', async () => {
 
-        const result = await requester.get('/user/allUsers')
+        const result = await requester.get('/user/')
 
         console.log(result.body);
 

@@ -109,7 +109,7 @@ paths:
         required: true
         type: String
       responses:
-        "204":
+        "200":
           description: No hay información adicional
         "404":
           description: El producto no ha sido encontrado

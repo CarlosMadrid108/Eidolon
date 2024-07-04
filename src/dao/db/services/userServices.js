@@ -76,7 +76,8 @@ export class UserServices {
 
             if(!user){
                 logger.info(`User (_id: ${user._id}) doesn't exist - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-                return false
+                //return false
+                return "El usuario no existe"
             }
             
             if (user.role==="user"){
@@ -89,23 +90,26 @@ export class UserServices {
 
                 if(!id || !home || !account){
                     logger.info(`user does not meet the requirements  - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-                    return false
+                    //return false
+                    return "El usuario no cumple los requisitos"
                 }
 
                 user.role = "premium"
                 await user.save()
                 logger.info(`User (_id: ${user._id}) role modified - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-                return true
+                //return true
+                return "El rol de usuario fue modificado con éxito"
             } else {
                 user.role = "user"
                 await user.save()
                 logger.info(`User (_id: ${user._id}) role modified - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-                return true
+                //return true
+                return "El rol de usuario fue modificado con éxito"
             }
 
         }catch(err){
             logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
-            return false
+            return "Error al actualizar"
         }
 
     }
@@ -165,14 +169,47 @@ export class UserServices {
 
         try{
 
-            const allUsers = await users.find()
-
-            return allUsers
+            const allUsers = await users.aggregate([
+                {
+                  $project: {
+                    first_name: 1,
+                    last_name: 1,
+                    email: 1,
+                    age: 1,
+                    role: 1,
+                  }
+                }
+              ]);
+          
+              return allUsers;
 
         }catch(err){
             console.log(err)
         }
 
+    }
+
+    async deleteInactive(){
+
+        try {
+    
+            const dateLimit = new Date();
+            dateLimit.setDate(dateLimit.getDate() - 30);
+        
+            const result = await users.deleteMany({
+              last_connection: { $lt: dateLimit },
+              
+            });
+        
+            console.log(`Usuarios eliminados: ${result.deletedCount}`);
+
+            return true
+          } catch (error) {
+            console.error('Error eliminando usuarios inactivos:', error);
+
+            return false
+          }
+          
     }
 
 }
