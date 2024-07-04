@@ -1,4 +1,3 @@
-import { io } from '../../../index.js'
 import products from '../models/product.model.js'
 import { faker } from "@faker-js/faker/locale/es"
 import { logger } from '../../../config/logger.js'
@@ -29,7 +28,7 @@ export class ProductServices {
                 prevLink: `http://localhost:8080/api/products/?limit=${limit}&page=${prods.prevPage}`,
                 nextLink: `http://localhost:8080/api/products/?limit=${limit}&page=${prods.nextPage}`
             }
-            io.emit('productos', list)
+
             return list
         }
 
@@ -47,7 +46,7 @@ export class ProductServices {
                 prevLink: `http://localhost:8080/api/products/?limit=${limit}&category=${filter}&page=${prods.prevPage}`,
                 nextLink: `http://localhost:8080/api/products/?limit=${limit}&category=${filter}&page=${prods.nextPage}`
             }
-            io.emit('productos', list)
+
             return list
         }
         if (sort && !filter) {
@@ -63,7 +62,7 @@ export class ProductServices {
                 prevLink: `http://localhost:8080/api/products/?limit=${limit}&page=${prods.prevPage}$sort=${sort}`,
                 nextLink: `http://localhost:8080/api/products/?limit=${limit}&page=${prods.nextPage}$sort=${sort}`
             }
-            io.emit('productos', list)
+
             return list
         }
 
@@ -79,7 +78,7 @@ export class ProductServices {
             prevLink: `http://localhost:8080/api/products/?limit=${limit}&page=${prods.prevPage}&category=${filter}$sort=${sort}`,
             nextLink: `http://localhost:8080/api/products/?limit=${limit}&page=${prods.nextPage}&category=${filter}$sort=${sort}`
         }
-        io.emit('productos', list)
+        
         return list
     }
 
@@ -101,8 +100,7 @@ export class ProductServices {
             await products.create(prod)
             logger.info(`New product was created at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             const prods = await products.find()
-            //emit
-            io.emit('productos', prods)
+        
             return true
         } catch (err) {
             logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
@@ -115,8 +113,7 @@ export class ProductServices {
             await products.updateOne({ _id: pid }, producto)
             logger.info(`Product updated at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             const prods = await products.find()
-            //emit
-            io.emit('productos', prods)
+        
             return true
         } catch (err) {
             logger.error(`${err} - at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
@@ -138,9 +135,7 @@ export class ProductServices {
                 await products.deleteOne({ _id: pid })
                 logger.info(`Product deleted at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
                 const prods = await products.find()
-                //emit
-                io.emit('productos', prods)
-    
+        
                 return true
             }
 
@@ -158,8 +153,6 @@ export class ProductServices {
 
             logger.info(`Product deleted at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`)
             const prods = await products.find()
-            //emit
-            io.emit('productos', prods)
 
             return true
 

@@ -9,12 +9,12 @@ const userController = new UserConstructors
 
 routerUsers.post('/manage/requestResetPasword', onlyGuests, userController.requestResetPass)
 routerUsers.post('/manage/resetPassword/:token', onlyGuests, userController.resetPassword)
-routerUsers.post('/manage/delete/:uid', userController.deleteUser)
+routerUsers.post('/manage/delete/:uid', handlePolicies(["admin"]), userController.deleteUser)
 routerUsers.get('/manage/searchByEmail', userController.findUserbyEmail)
 routerUsers.post('/addFields', handlePolicies(["admin"]), userController.addFieldsToAll)
-routerUsers.post('/premium/:uid', userController.changeRole)
-routerUsers.get('/', userController.getAllUsers)
-routerUsers.delete('/', userController.deleteInactiveUsers)
+routerUsers.post('/premium/:uid', handlePolicies(["admin"]), userController.changeRole)
+routerUsers.get('/', handlePolicies(["admin"]), userController.getAllUsers)
+routerUsers.delete('/', handlePolicies(["admin"]), userController.deleteInactiveUsers)
 
 
 routerUsers.post("/:uid/documents", uploader.fields(

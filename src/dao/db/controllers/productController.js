@@ -1,7 +1,4 @@
 import { ProductServices } from "../services/productServices.js";
-import CustomError from "../services/Errors/customErrors.js";
-import { generateProductErrorInfoSP } from "../services/Errors/messages/productsErrorMessages.js";
-import EErrors from "../services/Errors/errorsEnum.js";
 import products from "../models/product.model.js";
 
 const productServices = new ProductServices
@@ -45,23 +42,6 @@ export default class MongoProductController {
 
     async addProduct(req, res, next) {
 
-        let { title, description, code, price, status, stock, category, thumbnail } = req.body
-
-        if (!title || !description || !code || !price || !status || !stock || !category) {
-            CustomError.createError({
-                name: "Product creation Error",
-                cause: generateProductErrorInfoSP({ title, description, code, price, status, stock, category }),
-                message: "Error tratando de crear el producto",
-                code: EErrors.INVALID_TYPES_ERROR
-            })
-        }
-        // const conf = await productServices.createProduct(req.body)
-        // if (conf) {
-        //     res.status(201).send("Producto creado")
-        // } else {
-        //     res.status(400).send("El producto ya existe / falta uno o más campos")
-        // }
-
         if (req.session.user) {
 
             if (req.session.user.role === "premium") {
@@ -96,26 +76,6 @@ export default class MongoProductController {
             res.status(201).send("Producto creado")
 
         }
-        // if (req.session.user.role === "premium") {
-        //     const prod = await productServices.createProduct({ ...req.body, owner: req.session.user.email })
-
-        //     if (!prod) {
-        //         res.status(400).send("El producto ya existe / falta uno o más campos")
-        //         return
-        //     }
-
-        //     res.status(201).send("Producto creado")
-        // } else {
-        //     const prod = await productServices.createProduct({ ...req.body, owner: "admin" })
-
-        //     if (!prod) {
-        //         res.status(400).send("El producto ya existe / falta uno o más campos")
-        //         return
-        //     }
-
-        //     res.status(201).send("Producto creado")
-        // }
-
 
     }
 

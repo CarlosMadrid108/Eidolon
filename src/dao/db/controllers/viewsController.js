@@ -99,7 +99,7 @@ export class ViewsController {
             id: uid
         })
 
-        //res.send(user)
+
     }
 
     async error404 (req, res, next) {

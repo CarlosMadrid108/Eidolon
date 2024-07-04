@@ -1,5 +1,4 @@
 import express from "express";
-//import methodOverride from 'method-override'
 import handlebars from "express-handlebars"
 import path from 'path';
 import { fileURLToPath } from 'url'
@@ -29,7 +28,6 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(__dirname + "/public"))
-//app.use(methodOverride('_method'));
 
 app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
